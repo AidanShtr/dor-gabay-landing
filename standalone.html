@@ -135,6 +135,10 @@ p{margin:0 0 1em}
 /* ================= ACTS ================= */
 main{position:relative;z-index:2}
 .act{height:100svh;min-height:560px;position:relative;overflow:hidden;display:grid;place-items:center}
+/* Without this, every act spends a whole screen height scrolling itself out before the
+   next one can pin — a dead stretch where nothing animates. Pulling each act up by one
+   screen makes the next scene take over the moment the previous one finishes. */
+main .act + .act{margin-block-start:-100svh}
 .act-inner{width:100%;max-width:1600px;margin-inline:auto;padding:0 var(--pad);position:relative;z-index:3}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.26em;color:var(--gold);margin-bottom:20px}
 .eyebrow::before{content:"";width:32px;height:1px;background:var(--gold)}
@@ -607,7 +611,7 @@ document.querySelectorAll('#waBtn,[data-wa]').forEach(a=>{ a.href=waURL; a.targe
 /* ---------- smooth scroll ---------- */
 let lenis = null;
 if (!reduced && window.Lenis){
-  lenis = new Lenis({ lerp:.075, smoothWheel:true });
+  lenis = new Lenis({ lerp:.1, smoothWheel:true });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(t => lenis.raf(t*1000));
   gsap.ticker.lagSmoothing(0);
@@ -794,7 +798,7 @@ const CAM=[];                       // one camera target per act, in page order
 const BASE={fx:-.64,y:0,z:0,rz:.19,s:1,spin:.22,dust:.035,ring:0,glow:1};
 function actTL(el,len,camTo,ratio){
   const tl=gsap.timeline({scrollTrigger:{
-    trigger:el, start:'top top', end:'+='+(innerHeight*len), pin:true, scrub:1,
+    trigger:el, start:'top top', end:'+='+(innerHeight*len), pin:true, scrub:.35,
     anticipatePin:1, invalidateOnRefresh:true
   }});
   if(camTo) CAM.push({st:tl.scrollTrigger, to:camTo, ratio:ratio||.45});
@@ -827,7 +831,7 @@ function openLeaves(tl,el,at){
 /* ---- ACT 1 : hero — the headline tears apart, we dive into the pole ---- */
 (function(){
   const el=act('act-hero');
-  const tl=actTL(el,1.1,{fx:-.15,s:1.3,z:7,spin:.85,dust:.06});
+  const tl=actTL(el,.85,{fx:-.15,s:1.3,z:7,spin:.85,dust:.06});
   const words=gsap.utils.toArray('.hero-h1 .rv');
   tl.to(words.slice(0,2),{x:'40vw',opacity:0,duration:1,ease:'power2.in'},.15)
     .to(words.slice(2),{x:'-40vw',opacity:0,duration:1,ease:'power2.in'},.15)
@@ -838,7 +842,7 @@ function openLeaves(tl,el,at){
 /* ---- ACT 2 : the question — doors open onto it ---- */
 (function(){
   const el=act('act-question');
-  const tl=actTL(el,1.25,{fx:.95,s:.46,z:-9,rz:.4,spin:.3,dust:.05});
+  const tl=actTL(el,.95,{fx:.95,s:.46,z:-9,rz:.4,spin:.3,dust:.05});
   gsap.set(el.querySelectorAll('.q-line'),{y:60,opacity:0});
   openLeaves(tl,el,0);
   tl.to(el.querySelectorAll('.q-line'),{y:0,opacity:1,duration:.5,stagger:.12,ease:'expo.out'},.22)
@@ -850,7 +854,7 @@ function openLeaves(tl,el,at){
 (function(){
   const el=act('act-pain');
   const cards=gsap.utils.toArray(el.querySelectorAll('.pcard'));
-  const tl=actTL(el,2.2,{fx:-1.02,s:.5,z:-12,rz:-.45,spin:.5,dust:.08});
+  const tl=actTL(el,1.8,{fx:-1.02,s:.5,z:-12,rz:-.45,spin:.5,dust:.08});
   gsap.set(el.querySelector('.deck-head'),{opacity:0,y:30});
   tl.to(el.querySelector('.deck-head'),{opacity:1,y:0,duration:.5,ease:'power3.out'},0);
   cards.forEach((c,i)=>{
@@ -867,14 +871,14 @@ function openLeaves(tl,el,at){
   const el=act('program');
   const rail=el.querySelector('.rail');
   const dist=()=>Math.max(0, rail.scrollWidth - innerWidth + 40);
-  const tl=actTL(el,3,{fx:-.2,y:-3.4,s:.5,z:-15,rz:1.5,spin:.25,dust:.05,ring:.35});
+  const tl=actTL(el,2.2,{fx:-.2,y:-3.4,s:.5,z:-15,rz:1.5,spin:.25,dust:.05,ring:.35});
   openLeaves(tl,el,0);
   gsap.set(el.querySelector('.prog-head'),{opacity:0,y:-20});
   tl.to(el.querySelector('.prog-head'),{opacity:1,y:0,duration:.35,ease:'power3.out'},.2);
   tl.fromTo(rail,{x:0},{x:()=>dist(),duration:2.4,ease:'none'},.4);
 
   const cards=gsap.utils.toArray(el.querySelectorAll('.scard'));
-  ScrollTrigger.create({trigger:el,start:'top top',end:'+='+(innerHeight*3),
+  ScrollTrigger.create({trigger:el,start:'top top',end:'+='+(innerHeight*2.2),
     onUpdate(){
       const mid=innerWidth/2; let best=null,bd=1e9;
       cards.forEach(c=>{const r=c.getBoundingClientRect();const d=Math.abs(r.left+r.width/2-mid);
@@ -892,7 +896,7 @@ function openLeaves(tl,el,at){
 (function(){
   const el=act('act-gallery');
   const shots=gsap.utils.toArray(el.querySelectorAll('.shot'));
-  const tl=actTL(el,1.5,{fx:-.9,s:.42,z:-13,rz:.5,spin:.3,dust:.05,ring:.2,glow:1.1});
+  const tl=actTL(el,1.15,{fx:-.9,s:.42,z:-13,rz:.5,spin:.3,dust:.05,ring:.2,glow:1.1});
   gsap.set(el.querySelector('.deck-head'),{opacity:0,y:26});
   tl.to(el.querySelector('.deck-head'),{opacity:1,y:0,duration:.4,ease:'power3.out'},0);
   shots.forEach((f,i)=>{
@@ -907,7 +911,7 @@ function openLeaves(tl,el,at){
 /* ---- ACT 6 : Dor — an iris opens on him ---- */
 (function(){
   const el=act('about');
-  const tl=actTL(el,1.4,{fx:-.5,s:.4,z:-12,rz:.2,spin:.2,dust:.04,ring:.15,glow:1.3});
+  const tl=actTL(el,.95,{fx:-.5,s:.4,z:-12,rz:.2,spin:.2,dust:.04,ring:.15,glow:1.3});
   const iris=el.querySelector('.iris');
   gsap.set(iris,{clipPath:'circle(0% at 50% 50%)'});
   gsap.set(el.querySelectorAll('.dor-copy > *'),{x:70,opacity:0});
@@ -928,7 +932,7 @@ function openLeaves(tl,el,at){
 let calcLive=false;
 (function(){
   const el=act('money');
-  const tl=actTL(el,1.6,{fx:.92,y:-1,s:.42,z:-9,rz:.1,spin:.4,dust:.1,ring:.9,glow:1.6});
+  const tl=actTL(el,1.05,{fx:.92,y:-1,s:.42,z:-9,rz:.1,spin:.4,dust:.1,ring:.9,glow:1.6});
   const out=document.getElementById('vTotal');
   gsap.set(el.querySelector('.calc'),{opacity:0,y:40});
   gsap.set(el.querySelector('.money-note'),{opacity:0});
@@ -943,7 +947,7 @@ let calcLive=false;
 (function(){
   const el=act('act-proof');
   const cards=gsap.utils.toArray(el.querySelectorAll('.qcard'));
-  const tl=actTL(el,1.8,{fx:.95,s:.45,z:-11,rz:.3,spin:.3,dust:.06,ring:.25,glow:1.1});
+  const tl=actTL(el,1.2,{fx:.95,s:.45,z:-11,rz:.3,spin:.3,dust:.06,ring:.25,glow:1.1});
   gsap.set(el.querySelector('.deck-head'),{opacity:0,y:26});
   tl.to(el.querySelector('.deck-head'),{opacity:1,y:0,duration:.4,ease:'power3.out'},0);
   const spread=isNarrow()?[-14,-5,5,14]:[-78,-26,26,78];
