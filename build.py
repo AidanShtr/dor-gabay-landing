@@ -5,6 +5,7 @@ Build the standalone landing page.
     python3 build.py            -> index.html   (noindex, for the public draft)
     python3 build.py --index    -> index.html   (indexable, once the copy is real)
     python3 build.py --fetch    -> re-download everything into vendor/ first
+    python3 build.py --single   -> standalone.html, photos inlined too (offline, sendable)
 
 src/index.html is the editable source: it loads GSAP, ScrollTrigger, Three.js, Lenis and
 Heebo from CDNs, so it can be opened and edited directly. This script inlines all of them
@@ -65,7 +66,7 @@ def vendor(name):
     return io.open(path, encoding='utf-8').read()
 
 
-def build(noindex=True):
+def build(noindex=True, single=False):
     s = io.open(os.path.join(ROOT, 'src', 'index.html'), encoding='utf-8').read()
 
     if noindex:                                        # keep the draft out of Google
@@ -89,20 +90,33 @@ def build(noindex=True):
         code = vendor(name).replace('</script>', '<\\/script>')   # can't end the block early
         s = s.replace(tag, '<script>/* %s */\n%s\n</script>' % (name, code))
 
+    if single:                                     # fold the photos in too, for a sendable file
+        import mimetypes
+        for m in sorted(set(re.findall(r'"(assets/[^"]+)"', s))) + \
+                 sorted(set(re.findall(r'url\((assets/[^)]+)\)', s))):
+            path = os.path.join(ROOT, m)
+            if not os.path.exists(path):
+                continue
+            mime = mimetypes.guess_type(path)[0] or 'application/octet-stream'
+            uri = 'data:%s;base64,%s' % (mime, base64.b64encode(open(path, 'rb').read()).decode())
+            s = s.replace('"%s"' % m, '"%s"' % uri).replace('url(%s)' % m, 'url(%s)' % uri)
+
     left = re.findall(r'(?:src|href)="(https?://[^"]+)"', s)
     if left:
         sys.exit('page still loads something over the network: %s' % left)
 
-    out = os.path.join(ROOT, 'index.html')
-    io.open(out, 'w', encoding='utf-8').write(s)
-    print('built index.html  %d KB  noindex=%s' % (len(s.encode()) / 1024, noindex))
+    name = 'standalone.html' if single else 'index.html'
+    io.open(os.path.join(ROOT, name), 'w', encoding='utf-8').write(s)
+    print('built %s  %d KB  noindex=%s' % (name, len(s.encode()) / 1024, noindex))
 
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--fetch', action='store_true', help='re-download libraries and fonts')
     ap.add_argument('--index', action='store_true', help='allow search engines (drop noindex)')
+    ap.add_argument('--single', action='store_true',
+                    help='also inline the photos and write standalone.html (one sendable file)')
     a = ap.parse_args()
     if a.fetch:
         fetch_vendor()
-    build(noindex=not a.index)
+    build(noindex=not a.index, single=a.single)
