@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>האקדמיה של דור גבאי — קורס ברברינג ב־8 מפגשים</title>
+<meta name="description" content="מאפס למספרה ב־8 מפגשים. קורס ברברינג פרקטי לחיילים משוחררים וצעירים שרוצים מקצוע עם הכנסה מהירה, בלי תואר ובלי שנים של לימודים.">
+<meta property="og:title" content="האקדמיה של דור גבאי — מקצוע ביד ב־8 מפגשים">
+<meta property="og:description" content="קורס ברברינג פרקטי. מאפס למספרה. בלי תואר, בלי חובות.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.css">
+<style>
+:root{
+  --ink:#08080a;
+  --ink-2:#0e0e12;
+  --ink-3:#15151b;
+  --bone:#f2eee6;
+  --muted:#8f8a81;
+  --gold:#d9a441;
+  --gold-hi:#f0c877;
+  --red:#e0321f;
+  --line:rgba(242,238,230,.12);
+  --pad: clamp(20px, 5vw, 80px);
+  --fs-display: clamp(42px, 8.2vw, 150px);
+  --fs-h2: clamp(32px, 6.2vw, 92px);
+  --fs-h3: clamp(22px, 3vw, 40px);
+  --fs-body: clamp(16px, 1.25vw, 19px);
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--ink);
+  color:var(--bone);
+  font-family:"Heebo",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  font-size:var(--fs-body);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body.is-loading{overflow:hidden;height:100vh}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+::selection{background:var(--gold);color:#000}
+
+/* ---------- grain + vignette ---------- */
+.grain{
+  position:fixed;inset:-50%;z-index:9998;pointer-events:none;opacity:.1;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  animation:grainMove 8s steps(6) infinite;
+  mix-blend-mode:overlay;
+}
+@keyframes grainMove{
+  0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}
+  60%{transform:translate(-2%,-2%)}80%{transform:translate(3%,1%)}100%{transform:translate(0,0)}
+}
+
+/* ---------- cursor ---------- */
+.cursor,.cursor-dot{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;border-radius:999px;mix-blend-mode:difference}
+.cursor{width:38px;height:38px;border:1px solid rgba(242,238,230,.6);margin:-19px 0 0 -19px;transition:width .35s var(--ease),height .35s var(--ease),margin .35s var(--ease),background .35s var(--ease)}
+.cursor.is-hot{width:76px;height:76px;margin:-38px 0 0 -38px;background:rgba(242,238,230,.9);border-color:transparent}
+.cursor-dot{width:5px;height:5px;margin:-2.5px 0 0 -2.5px;background:var(--bone)}
+@media (hover:none),(max-width:820px){.cursor,.cursor-dot{display:none}}
+
+/* ---------- preloader ---------- */
+#preloader{position:fixed;inset:0;z-index:10000;background:var(--ink);display:grid;place-items:center}
+#preloader .pl-inner{text-align:center;width:min(78vw,520px)}
+#preloader .pl-word{font-size:clamp(28px,6vw,64px);font-weight:900;letter-spacing:-.02em;line-height:1}
+#preloader .pl-word span{display:inline-block;opacity:0;transform:translateY(60%)}
+#preloader .pl-bar{margin-top:22px;height:2px;background:rgba(242,238,230,.15);position:relative;overflow:hidden}
+#preloader .pl-bar i{position:absolute;inset:0 100% 0 0;background:var(--gold);transform-origin:right center}
+#preloader .pl-num{margin-top:12px;font-size:13px;letter-spacing:.3em;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;right:0;left:0;z-index:600;display:flex;align-items:center;justify-content:space-between;
+  padding:18px var(--pad);transition:background .4s var(--ease),backdrop-filter .4s var(--ease),padding .4s var(--ease)}
+.nav.scrolled{background:rgba(8,8,10,.72);backdrop-filter:blur(14px);padding:12px var(--pad);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:-.01em;font-size:17px}
+.brand .pole{width:12px;height:26px;border-radius:6px;background:repeating-linear-gradient(-45deg,var(--red) 0 4px,#fff 4px 8px);box-shadow:0 0 18px rgba(224,50,31,.5)}
+.nav-links{display:flex;gap:26px;font-size:14px;color:#c9c4ba}
+.nav-links a{position:relative;padding-bottom:3px}
+.nav-links a::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.nav-links a:hover::after{transform:scaleX(1)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:820px){
+  .nav > .btn{display:none}
+  .brand{font-size:15px;white-space:nowrap}
+  .brand .muted{display:none}
+  .nav{padding:14px var(--pad)}
+}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:12px;padding:16px 30px;border-radius:999px;border:0;
+  font-weight:800;font-size:16px;cursor:pointer;overflow:hidden;isolation:isolate;line-height:1;white-space:nowrap}
+.btn-gold{background:var(--gold);color:#0b0b0d}
+.btn-gold::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--gold-hi);transform:translateY(101%);transition:transform .5s var(--ease)}
+.btn-gold:hover::before{transform:translateY(0)}
+.btn-ghost{background:transparent;color:var(--bone);border:1px solid rgba(242,238,230,.28)}
+.btn-ghost::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--bone);transform:translateY(101%);transition:transform .5s var(--ease)}
+.btn-ghost:hover{color:#0b0b0d;border-color:transparent}
+.btn-ghost:hover::before{transform:translateY(0)}
+.btn .arrow{display:inline-block;transition:transform .45s var(--ease)}
+.btn:hover .arrow{transform:translateX(-5px)}
+
+/* ---------- layout ---------- */
+section{position:relative}
+.wrap{padding:clamp(80px,11vh,150px) var(--pad)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:22px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--gold);display:block}
+h1,h2,h3{margin:0;font-weight:900;letter-spacing:-.025em;line-height:.95}
+h2{font-size:var(--fs-h2)}
+h3{font-size:var(--fs-h3);line-height:1.1}
+p{margin:0 0 1em}
+.lead{font-size:clamp(17px,1.7vw,23px);color:#cec9c0;max-width:62ch;line-height:1.55}
+.muted{color:var(--muted)}
+.gold{color:var(--gold)}
+
+/* word-reveal */
+.rv{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+.rv > i{display:inline-block;font-style:inherit;transform:translateY(105%)}
+
+/* ---------- hero ---------- */
+.hero{height:100svh;min-height:600px;position:relative;overflow:hidden;display:flex;align-items:center}
+#hero3d{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block}
+.hero-glow{position:absolute;z-index:0;width:60vw;height:60vw;border-radius:50%;left:-15vw;top:-10vw;
+  background:radial-gradient(circle,rgba(217,164,65,.22),transparent 62%);filter:blur(30px);pointer-events:none}
+.hero-inner{position:relative;z-index:2;padding:0 var(--pad);width:100%}
+.hero h1{font-size:var(--fs-display)}
+.hero h1 .stroke{-webkit-text-stroke:1.5px var(--gold);color:transparent}
+.hero-sub{margin-top:26px;max-width:46ch}
+.hero-cta{margin-top:36px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero-foot{position:absolute;bottom:26px;right:var(--pad);left:var(--pad);z-index:2;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;font-size:13px;color:var(--muted)}
+.scroll-cue{display:flex;align-items:center;gap:10px;letter-spacing:.2em;font-size:11px}
+.scroll-cue .line{width:1px;height:42px;background:linear-gradient(var(--gold),transparent);animation:cueDrop 1.8s var(--ease) infinite}
+@keyframes cueDrop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media(max-width:900px){
+  #hero3d{opacity:.42}
+  .hero-foot .hf-right{display:none}
+  .eyebrow{font-size:11px;letter-spacing:.16em}
+  .eyebrow::before{width:22px}
+  .hero-cta .btn{width:100%;justify-content:center}
+}
+
+/* ---------- marquee ---------- */
+.marquee{border-block:1px solid var(--line);background:var(--ink-2);overflow:hidden;padding:18px 0}
+.marquee .track{display:flex;gap:44px;width:max-content;will-change:transform}
+.marquee .item{display:flex;align-items:center;gap:44px;font-size:clamp(20px,3vw,40px);font-weight:900;letter-spacing:-.02em;white-space:nowrap;color:#221f1c;-webkit-text-stroke:1px rgba(242,238,230,.25)}
+.marquee .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);-webkit-text-stroke:0;flex:none}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}
+.stat{background:var(--ink);padding:clamp(28px,4vw,54px) clamp(18px,2.5vw,34px)}
+.stat .n{font-size:clamp(38px,5.6vw,80px);font-weight:900;line-height:1;letter-spacing:-.04em;color:var(--gold);font-variant-numeric:tabular-nums}
+.stat .l{margin-top:10px;font-size:14px;color:var(--muted);line-height:1.4}
+@media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- pain ---------- */
+.pain{background:var(--ink)}
+.pain-head{max-width:20ch}
+.pain-list{margin-top:60px;border-top:1px solid var(--line)}
+.pain-row{display:grid;grid-template-columns:70px 1fr auto;gap:clamp(14px,3vw,40px);align-items:center;
+  padding:clamp(22px,3.4vw,40px) 0;border-bottom:1px solid var(--line);position:relative}
+.pain-row .idx{font-size:13px;color:var(--gold);letter-spacing:.2em}
+.pain-row .txt{font-size:clamp(19px,2.6vw,36px);font-weight:700;letter-spacing:-.02em;line-height:1.25}
+.pain-row .mark{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);flex:none;transition:.45s var(--ease)}
+.pain-row:hover .mark{background:var(--gold);color:#000;border-color:var(--gold);transform:rotate(-90deg)}
+@media(max-width:700px){.pain-row{grid-template-columns:44px 1fr}.pain-row .mark{display:none}}
+
+/* ---------- pinned 8 sessions ---------- */
+.sessions{background:var(--ink-2);overflow:hidden}
+.sessions-head{padding:clamp(70px,9vh,120px) var(--pad) 0}
+.hscroll{display:flex;gap:clamp(16px,2vw,28px);padding:clamp(34px,5vh,60px) var(--pad);width:max-content;align-items:stretch}
+.card{width:clamp(270px,27vw,380px);background:var(--ink-3);border:1px solid var(--line);border-radius:22px;padding:30px;
+  display:flex;flex-direction:column;justify-content:space-between;min-height:clamp(330px,44vh,440px);position:relative;overflow:hidden;transition:border-color .5s var(--ease),transform .6s var(--ease)}
+.card::after{content:"";position:absolute;inset:auto -30% -60% auto;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,164,65,.22),transparent 65%);opacity:0;transition:opacity .6s var(--ease)}
+.card:hover{border-color:rgba(217,164,65,.5);transform:translateY(-8px)}
+.card:hover::after{opacity:1}
+.card .num{font-size:14px;letter-spacing:.25em;color:var(--gold)}
+.card h3{margin-top:auto;padding-top:26px}
+.card p{margin:12px 0 0;font-size:15.5px;color:#a9a49b;line-height:1.55}
+.sessions-note{padding:0 var(--pad) clamp(60px,8vh,90px);color:var(--muted);font-size:15px}
+@media(max-width:900px){
+  .hscroll{width:auto;display:grid;grid-template-columns:1fr;gap:16px}
+  .card{width:auto;min-height:0}
+  .card h3{padding-top:14px}
+}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(30px,5vw,80px);align-items:center}
+.ph{position:relative;border-radius:24px;overflow:hidden;background:linear-gradient(145deg,#1b1b21,#0d0d10);border:1px solid var(--line);aspect-ratio:4/5;display:grid;place-items:center;text-align:center}
+.ph .ph-label{font-size:13px;color:#57534c;letter-spacing:.14em;padding:20px;line-height:1.7}
+.ph .ph-label b{display:block;color:var(--gold);font-size:15px;letter-spacing:.2em;margin-bottom:8px}
+.about-points{margin-top:30px;display:grid;gap:14px;padding:0}
+.about-points li{list-style:none;display:flex;gap:14px;align-items:flex-start;color:#cec9c0}
+.about-points .tick{color:var(--gold);font-weight:900;flex:none}
+@media(max-width:900px){.about{grid-template-columns:1fr}.ph{aspect-ratio:1/1}}
+
+/* ---------- money calculator ---------- */
+.money{background:linear-gradient(180deg,var(--ink) 0%,#100d09 50%,var(--ink) 100%)}
+.calc{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,64px);align-items:center;
+  border:1px solid var(--line);border-radius:26px;padding:clamp(24px,3.4vw,48px);background:rgba(20,18,15,.6);backdrop-filter:blur(10px)}
+.ctrl{margin-bottom:30px}
+.ctrl label{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;color:#cec9c0;margin-bottom:14px}
+.ctrl label b{font-size:22px;color:var(--gold);font-weight:900;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:rgba(242,238,230,.16);border-radius:3px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-10px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 0 6px rgba(217,164,65,.16);transition:box-shadow .3s}
+input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 12px rgba(217,164,65,.22)}
+input[type=range]::-moz-range-track{height:3px;background:rgba(242,238,230,.16);border-radius:3px}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border:0;border-radius:50%;background:var(--gold)}
+.result{text-align:center}
+.result .cap{font-size:13px;letter-spacing:.24em;color:var(--muted)}
+.result .big{font-size:clamp(50px,8.5vw,110px);font-weight:900;letter-spacing:-.05em;line-height:1;margin:10px 0;
+  background:linear-gradient(120deg,var(--gold-hi),var(--gold) 55%,#8a5f18);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.result .sub{font-size:14px;color:var(--muted);max-width:34ch;margin:0 auto}
+@media(max-width:900px){.calc{grid-template-columns:1fr}}
+
+/* ---------- testimonials ---------- */
+.quotes{display:flex;gap:20px;width:max-content;will-change:transform}
+.quote{width:min(84vw,440px);background:var(--ink-3);border:1px solid var(--line);border-radius:20px;padding:30px;display:flex;flex-direction:column;gap:16px}
+.quote p{font-size:17px;color:#d8d3ca;margin:0;line-height:1.6}
+.quote .who{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
+.quote .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(140deg,#2a2620,#131316);border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);font-weight:900;flex:none}
+.stars{color:var(--gold);letter-spacing:3px;font-size:13px}
+
+/* ---------- faq ---------- */
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-q{width:100%;background:none;border:0;text-align:right;display:flex;justify-content:space-between;gap:20px;align-items:center;
+  padding:26px 0;cursor:pointer;font-size:clamp(17px,2vw,24px);font-weight:700;letter-spacing:-.01em;line-height:1.3}
+.faq-q .pm{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);transition:.45s var(--ease)}
+.faq-item.open .pm{transform:rotate(135deg);background:var(--gold);color:#000;border-color:var(--gold)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .55s var(--ease)}
+.faq-a > div{padding:0 0 26px;color:#aaa49a;max-width:72ch}
+
+/* ---------- form ---------- */
+.cta{background:radial-gradient(90% 120% at 50% 0%,#191307 0%,var(--ink) 58%)}
+.form-card{margin-top:44px;max-width:760px;border:1px solid var(--line);border-radius:26px;padding:clamp(24px,3.4vw,46px);background:rgba(16,16,19,.72);backdrop-filter:blur(12px)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field{position:relative}
+.field.full{grid-column:1/-1}
+.field input,.field select{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);padding:18px 2px 12px;outline:none;transition:border-color .4s}
+.field select{color:#cec9c0}
+.field select option{background:#14141a}
+.field input:focus,.field select:focus{border-color:var(--gold)}
+.field .lb{position:absolute;right:2px;top:18px;color:var(--muted);pointer-events:none;transition:.35s var(--ease);font-size:16px}
+.field input:focus + .lb,.field input:not(:placeholder-shown) + .lb{top:-4px;font-size:12px;color:var(--gold);letter-spacing:.12em}
+.form-foot{margin-top:28px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.form-note{font-size:13px;color:var(--muted);margin-top:16px}
+.form-ok{display:none;text-align:center;padding:26px 0}
+.form-ok.show{display:block}
+@media(max-width:700px){.fields{grid-template-columns:1fr}}
+
+/* ---------- sticky mobile bar ---------- */
+.sticky-bar{position:fixed;inset:auto 0 0 0;z-index:700;display:none;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(8,8,10,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(120%);transition:transform .5s var(--ease)}
+.sticky-bar.show{transform:translateY(0)}
+.sticky-bar .btn{flex:1;justify-content:center;padding:15px 12px;font-size:15px}
+@media(max-width:820px){.sticky-bar{display:flex}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px var(--pad);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+
+/* progress */
+.progress{position:fixed;top:0;right:0;left:0;height:2px;z-index:900;background:transparent}
+.progress i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--gold),var(--red));transform:scaleX(0);transform-origin:right}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001s!important;transition-duration:.001s!important}
+}
+</style>
+</head>
+<body class="is-loading">
+
+<div class="grain"></div>
+<div class="cursor"></div>
+<div class="cursor-dot"></div>
+<div class="progress"><i></i></div>
+
+<!-- ============ PRELOADER ============ -->
+<div id="preloader">
+  <div class="pl-inner">
+    <div class="pl-word" id="plWord">האקדמיה של דור גבאי</div>
+    <div class="pl-bar"><i></i></div>
+    <div class="pl-num"><span id="plNum">0</span>%</div>
+  </div>
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <a href="#top" class="brand"><span class="pole"></span> דור גבאי <span class="muted" style="font-weight:400">| אקדמיה</span></a>
+  <nav class="nav-links">
+    <a href="#program">התוכנית</a>
+    <a href="#about">מי אני</a>
+    <a href="#money">כמה מרוויחים</a>
+    <a href="#faq">שאלות</a>
+  </nav>
+  <a href="#lead" class="btn btn-gold" data-hot>הרשמה למחזור הקרוב <span class="arrow">←</span></a>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-glow"></div>
+  <canvas id="hero3d"></canvas>
+  <div class="hero-inner">
+    <div class="eyebrow">מחזור חדש נפתח בקרוב · מקומות מוגבלים</div>
+    <h1>
+      <span class="rv"><i>8</i></span> <span class="rv"><i>מפגשים.</i></span><br>
+      <span class="rv"><i class="stroke">מקצוע</i></span> <span class="rv"><i>לכל</i></span> <span class="rv"><i>החיים.</i></span>
+    </h1>
+    <p class="lead hero-sub">בלי תואר. בלי חובות. בלי לחכות שלוש שנים.<br>אתה נכנס בלי לדעת להחזיק מכונה — ויוצא עם מספריים ביד, תיק עבודות ולקוחות משלמים.</p>
+    <div class="hero-cta">
+      <a href="#lead" class="btn btn-gold" data-hot>אני רוצה פרטים <span class="arrow">←</span></a>
+      <a href="#program" class="btn btn-ghost" data-hot>מה לומדים ב־8 מפגשים</a>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <div class="scroll-cue"><span class="line"></span> גלול</div>
+    <div class="hf-right">מיועד לחיילים משוחררים · צעירים · מתחילים מאפס</div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" id="marquee">
+  <div class="track">
+    <div class="item">
+      <span>פייד נקי</span><span class="dot"></span><span>סקין פייד</span><span class="dot"></span>
+      <span>עיצוב זקן</span><span class="dot"></span><span>תער</span><span class="dot"></span>
+      <span>תיק עבודות</span><span class="dot"></span><span>לקוחות משלמים</span><span class="dot"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STATS ============ -->
+<div class="stats">
+  <div class="stat"><div class="n" data-count="8">0</div><div class="l">מפגשים מאפס עד לקוח משלם</div></div>
+  <div class="stat"><div class="n" data-count="90" data-suffix="%">0</div><div class="l">מהקורס — עבודה מעשית על ראש, לא תיאוריה</div></div>
+  <div class="stat"><div class="n" data-count="6" data-prefix="עד ">0</div><div class="l">תלמידים בכיתה. לא מפעל, ליווי אישי</div></div>
+  <div class="stat"><div class="n" data-count="120" data-suffix="+">0</div><div class="l">בוגרים שכבר עובדים במקצוע</div></div>
+</div>
+
+<!-- ============ PAIN ============ -->
+<section class="wrap pain">
+  <div class="eyebrow">בוא נדבר בכנות</div>
+  <h2 class="pain-head">השתחררת.<br>עכשיו <span class="gold">מה?</span></h2>
+  <p class="lead" style="margin-top:26px">רוב החברים שלך עושים בדיוק את אותו הדבר: מלצרות עד שיהיה כיוון, קורס שלא מוביל לכלום, או תואר שאולי יחזיר את עצמו בגיל 30. יש דרך אחרת — וזה לא סוד, זה פשוט מקצוע.</p>
+
+  <div class="pain-list">
+    <div class="pain-row"><div class="idx">01</div><div class="txt">אין לך 3–4 שנים לבזבז על תואר שאתה לא בטוח בו</div><div class="mark">←</div></div>
+    <div class="pain-row"><div class="idx">02</div><div class="txt">נמאס לך ממשמרות של 12 שעות בשכר מינימום</div><div class="mark">←</div></div>
+    <div class="pain-row"><div class="idx">03</div><div class="txt">אתה רוצה מקצוע שאף בוס ואף פיטורים לא יכולים לקחת ממך</div><div class="mark">←</div></div>
+    <div class="pain-row"><div class="idx">04</div><div class="txt">אתה רוצה להתחיל להכניס כסף החודש. לא בעוד שנתיים</div><div class="mark">←</div></div>
+  </div>
+</section>
+
+<!-- ============ 8 SESSIONS (pinned horizontal) ============ -->
+<section class="sessions" id="program">
+  <div class="sessions-head">
+    <div class="eyebrow">התוכנית</div>
+    <h2>8 מפגשים.<br>אפס מילים <span class="gold">מיותרות.</span></h2>
+    <p class="lead" style="margin-top:24px">כל מפגש הוא שכבה אחת שמתווספת לקודמת. בסוף — אתה לא "מכיר" את המקצוע, אתה עושה אותו.</p>
+  </div>
+
+  <div class="hscroll-outer">
+    <div class="hscroll">
+      <article class="card"><div class="num">מפגש 01</div><h3>הכלים והראש</h3><p>מכונות, סכינים, מספרי מדרגה, תער. איך מחזיקים, איך מיישרים, ואיך קוראים מבנה ראש לפני שנוגעים בשיער.</p></article>
+      <article class="card"><div class="num">מפגש 02</div><h3>פייד — הבסיס</h3><p>קווי מתאר, גובה הפייד, מעברים. התרגול שחוזר על עצמו עד שהיד עושה את זה לבד.</p></article>
+      <article class="card"><div class="num">מפגש 03</div><h3>סקין פייד ומעברים</h3><p>הפייד שכל לקוח מבקש. איך יורדים לעור בלי קווים ובלי כתמים, ואיך מתקנים כשמשהו יוצא לא נכון.</p></article>
+      <article class="card"><div class="num">מפגש 04</div><h3>מספריים וטקסטורה</h3><p>עבודת מספריים, קיצור מעל האוזן, טקסטורה למעלה. השלב שמפריד בין תספורת "בסדר" לתספורת שמחזירה לקוח.</p></article>
+      <article class="card"><div class="num">מפגש 05</div><h3>זקן, תער וקווים</h3><p>עיצוב זקן, חיבור לקו הלחי, גילוח בתער חם. זה גם המקום שבו מעלים את מחיר התספורת.</p></article>
+      <article class="card"><div class="num">מפגש 06</div><h3>לקוח אמיתי</h3><p>ראש חי על הכיסא, זמן על השעון. אתה עובד, אני עומד מאחורי הכתף ומתקן בזמן אמת.</p></article>
+      <article class="card"><div class="num">מפגש 07</div><h3>אינסטגרם ותיק עבודות</h3><p>איך מצלמים לפני/אחרי שנראה מקצועי, מה מעלים, ואיך מביאים את 20 הלקוחות הראשונים בלי לשלם על פרסום.</p></article>
+      <article class="card"><div class="num">מפגש 08</div><h3>להפוך את זה לעסק</h3><p>תמחור, עוסק פטור, ציוד שכדאי לקנות ומה לא, עבודה בכיסא בשכירות מול ניידת. איך מתחילים להכניס כסף כבר בשבוע הבא.</p></article>
+    </div>
+  </div>
+  <p class="sessions-note">* המפגשים מתקיימים <b class="gold">[יום בשבוע + שעה]</b> ב<b class="gold">[עיר / כתובת]</b>. ערכת כלים בסיסית <b class="gold">[כלולה / בתוספת תשלום]</b>.</p>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="wrap about" id="about">
+  <div>
+    <div class="eyebrow">מי עומד מאחורי זה</div>
+    <h2>דור <span class="gold">גבאי</span></h2>
+    <p class="lead" style="margin-top:24px">[כאן נכנסים 3–4 משפטים בגוף ראשון: כמה שנים במקצוע, איפה התחלת, מה עברת עד שהגעת לאן שאתה היום, ולמה החלטת ללמד. זה החלק שהכי מוכר — תכתוב אותו כמו שאתה מדבר, לא כמו קורות חיים.]</p>
+    <ul class="about-points">
+      <li><span class="tick">✕</span><span>[X] שנים מאחורי הכיסא, אלפי תספורות</span></li>
+      <li><span class="tick">✕</span><span>מלמד בקבוצות קטנות בלבד — כדי שכל אחד יקבל יד על היד</span></li>
+      <li><span class="tick">✕</span><span>ליווי גם אחרי הקורס: קבוצה סגורה, שאלות, התייעצות</span></li>
+    </ul>
+    <div style="margin-top:34px"><a href="#lead" class="btn btn-gold" data-hot>דבר איתי <span class="arrow">←</span></a></div>
+  </div>
+  <div class="ph" data-parallax>
+    <div class="ph-label"><b>תמונה</b>דור בעבודה — פורטרט אנכי<br>מומלץ 1200×1500px</div>
+  </div>
+</section>
+
+<!-- ============ MONEY ============ -->
+<section class="wrap money" id="money">
+  <div class="eyebrow">המספרים</div>
+  <h2>כמה כסף <span class="gold">יש פה?</span></h2>
+  <p class="lead" style="margin-top:24px">תזיז את הסליידרים. זו לא הבטחה — זו פשוט חשבונאות של ברבר שעובד.</p>
+
+  <div class="calc">
+    <div>
+      <div class="ctrl">
+        <label>לקוחות ביום <b><span id="vClients">6</span></b></label>
+        <input type="range" id="sClients" min="2" max="14" value="6" step="1">
+      </div>
+      <div class="ctrl">
+        <label>מחיר תספורת <b>₪<span id="vPrice">70</span></b></label>
+        <input type="range" id="sPrice" min="40" max="150" value="70" step="5">
+      </div>
+      <div class="ctrl" style="margin-bottom:0">
+        <label>ימי עבודה בחודש <b><span id="vDays">22</span></b></label>
+        <input type="range" id="sDays" min="12" max="26" value="22" step="1">
+      </div>
+    </div>
+    <div class="result">
+      <div class="cap">מחזור חודשי</div>
+      <div class="big">₪<span id="vTotal">9,240</span></div>
+      <p class="sub">לפני הוצאות ומיסים. ברבר שממלא יומן מגיע לזה תוך חודשים — לא שנים.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="wrap" style="padding-inline:0">
+  <div style="padding-inline:var(--pad)">
+    <div class="eyebrow">בוגרים</div>
+    <h2>מי שכבר <span class="gold">עובד</span></h2>
+  </div>
+  <div style="overflow:hidden;margin-top:44px">
+    <div class="quotes" id="quotes">
+      <div class="quote"><div class="stars">★★★★★</div><p>"נכנסתי חודש אחרי השחרור בלי מושג מה זה פייד. היום אני עובד בכיסא בשכירות ומכניס יותר ממה שהרווחתי במלצרות."</p><div class="who"><span class="av">א</span><span>[שם] · בוגר מחזור [X]</span></div></div>
+      <div class="quote"><div class="stars">★★★★★</div><p>"מה שהכי עזר זה מפגש 7. לא רק ללמוד לספר — ללמוד איך להביא לקוחות. הגעתי ל־15 לקוחות קבועים בחודש הראשון."</p><div class="who"><span class="av">מ</span><span>[שם] · בוגר מחזור [X]</span></div></div>
+      <div class="quote"><div class="stars">★★★★★</div><p>"הייתי בקורס אחר של 6 חודשים ויצאתי בלי ביטחון. פה תוך 8 מפגשים כבר עבדתי על ראשים אמיתיים."</p><div class="who"><span class="av">י</span><span>[שם] · בוגר מחזור [X]</span></div></div>
+      <div class="quote"><div class="stars">★★★★★</div><p>"דור לא עוזב אותך אחרי שנגמר. עד היום אני שולח לו תמונות ושואל שאלות והוא עונה."</p><div class="who"><span class="av">ש</span><span>[שם] · בוגר מחזור [X]</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="wrap" id="faq">
+  <div class="eyebrow">לפני שנרשמים</div>
+  <h2>שאלות <span class="gold">שנשאלות</span></h2>
+  <div style="margin-top:50px;border-top:1px solid var(--line)">
+    <div class="faq-item"><button class="faq-q">צריך ניסיון קודם? <span class="pm">+</span></button><div class="faq-a"><div>לא. רוב התלמידים מגיעים בלי שהחזיקו מכונה בחיים. המפגש הראשון מתחיל מאפס — איך מחזיקים, איך עומדים, איך קוראים ראש.</div></div></div>
+    <div class="faq-item"><button class="faq-q">כמה זה עולה ואפשר לפרוס? <span class="pm">+</span></button><div class="faq-a"><div>[מחיר הקורס] — ניתן לפריסה ל־[X] תשלומים ללא ריבית. [אם יש מימון לחיילים משוחררים / פיקדון — לציין כאן, זה טיעון מכירה חזק].</div></div></div>
+    <div class="faq-item"><button class="faq-q">אפשר להשתמש בפיקדון של החייל המשוחרר? <span class="pm">+</span></button><div class="faq-a"><div>[לענות כן/לא + איך בפועל. אם הקורס מוכר לשימוש בפיקדון — זה צריך להיות אחד המשפטים הראשונים בדף].</div></div></div>
+    <div class="faq-item"><button class="faq-q">מה מקבלים בסוף? <span class="pm">+</span></button><div class="faq-a"><div>תעודת סיום [של מי], תיק עבודות מצולם, רשימת ציוד מומלץ, וקבוצה סגורה לבוגרים עם ליווי מתמשך.</div></div></div>
+    <div class="faq-item"><button class="faq-q">באמת אפשר להתפרנס מזה? <span class="pm">+</span></button><div class="faq-a"><div>תלוי בך. ברבר שעובד 5 ימים בשבוע עם יומן מלא מגיע למספרים שראית במחשבון למעלה. מי שמחכה שלקוחות יגיעו לבד — לא. בגלל זה מפגש שלם מוקדש להבאת לקוחות.</div></div></div>
+    <div class="faq-item"><button class="faq-q">איפה ומתי המפגשים? <span class="pm">+</span></button><div class="faq-a"><div>[עיר, כתובת, יום ושעה, ואם יש אפשרות למחזור ערב]. הכיתה מוגבלת ל־[X] תלמידים כדי שכל אחד יקבל תשומת לב.</div></div></div>
+  </div>
+</section>
+
+<!-- ============ LEAD FORM ============ -->
+<section class="wrap cta" id="lead">
+  <div class="eyebrow">המחזור הקרוב</div>
+  <h2>תשאיר פרטים —<br>נדבר <span class="gold">5 דקות.</span></h2>
+  <p class="lead" style="margin-top:22px">בלי מכירות אגרסיביות. שיחה קצרה שבה נבין אם זה מתאים לך, ואם כן — אשמור לך מקום במחזור.</p>
+
+  <div class="form-card">
+    <form id="leadForm" novalidate>
+      <div class="fields">
+        <div class="field"><input type="text" id="fName" placeholder=" " required><span class="lb">שם מלא</span></div>
+        <div class="field"><input type="tel" id="fPhone" placeholder=" " inputmode="tel" required><span class="lb">טלפון</span></div>
+        <div class="field full">
+          <select id="fStatus">
+            <option value="">מה המצב שלך היום?</option>
+            <option>חייל משוחרר / לפני שחרור</option>
+            <option>עובד ורוצה להחליף מקצוע</option>
+            <option>כבר מספר קצת ורוצה להשתפר</option>
+            <option>אחר</option>
+          </select>
+        </div>
+        <div class="field full"><input type="text" id="fWhen" placeholder=" "><span class="lb">מתי תרצה להתחיל? (לא חובה)</span></div>
+      </div>
+      <div class="form-foot">
+        <button type="submit" class="btn btn-gold" data-hot>שלחו לי פרטים <span class="arrow">←</span></button>
+        <a href="#" id="waBtn" class="btn btn-ghost" data-hot>או וואטסאפ ישיר</a>
+      </div>
+      <p class="form-note">בלחיצה על שליחה אני מאשר/ת לחזור אליי בטלפון או בוואטסאפ. לא נשלח ספאם.</p>
+    </form>
+    <div class="form-ok" id="formOk">
+      <h3 class="gold">קיבלתי 👊</h3>
+      <p style="margin-top:12px;color:#cec9c0">אחזור אליך היום־מחר. אם דחוף — שלח וואטסאפ ונדבר עכשיו.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© <span id="yr"></span> האקדמיה של דור גבאי · כל הזכויות שמורות</div>
+  <div>[טלפון] · [אינסטגרם] · [כתובת]</div>
+</footer>
+
+<div class="sticky-bar" id="stickyBar">
+  <a href="#lead" class="btn btn-gold">השאר פרטים</a>
+  <a href="#" class="btn btn-ghost" data-wa>וואטסאפ</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+/* ============================================================
+   ⚙️  הגדרות — כאן משנים פרטים, לא צריך לגעת בשאר הקוד
+   ============================================================ */
+const CONFIG = {
+  whatsapp: '972500000000',                 // מספר וואטסאפ בפורמט בינלאומי, בלי + ובלי 0 בהתחלה
+  waMessage: 'היי דור, ראיתי את הדף של הקורס ואשמח לפרטים על המחזור הקרוב',
+  webhook: ''                               // כתובת לשליחת לידים (Formspree / Make / Zapier). ריק = נשלח לוואטסאפ
+};
+/* ============================================================ */
+
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+gsap.registerPlugin(ScrollTrigger);
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* ---------- WhatsApp links ---------- */
+const waURL = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(CONFIG.waMessage);
+document.querySelectorAll('#waBtn,[data-wa]').forEach(function(a){ a.href = waURL; a.target = '_blank'; a.rel='noopener'; });
+
+/* ---------- smooth scroll (Lenis) ---------- */
+let lenis = null;
+if (!reduced && window.Lenis) {
+  lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 1, smoothWheel: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(function(t){ lenis.raf(t * 1000); });
+  gsap.ticker.lagSmoothing(0);
+}
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    const id = a.getAttribute('href');
+    if (id.length < 2) return;
+    const el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(el, { offset: -10, duration: 1.4 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+/* ---------- custom cursor ---------- */
+(function(){
+  const c = document.querySelector('.cursor'), d = document.querySelector('.cursor-dot');
+  if (!c || window.matchMedia('(hover:none)').matches) return;
+  const cx = gsap.quickTo(c,'x',{duration:.5,ease:'power3'}), cy = gsap.quickTo(c,'y',{duration:.5,ease:'power3'});
+  const dx = gsap.quickTo(d,'x',{duration:.12,ease:'power3'}), dy = gsap.quickTo(d,'y',{duration:.12,ease:'power3'});
+  window.addEventListener('mousemove', function(e){ cx(e.clientX); cy(e.clientY); dx(e.clientX); dy(e.clientY); });
+  document.querySelectorAll('a,button,[data-hot],input[type=range]').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ c.classList.add('is-hot'); });
+    el.addEventListener('mouseleave', function(){ c.classList.remove('is-hot'); });
+  });
+})();
+
+/* ---------- magnetic buttons ---------- */
+document.querySelectorAll('.btn').forEach(function(btn){
+  if (window.matchMedia('(hover:none)').matches) return;
+  const xTo = gsap.quickTo(btn,'x',{duration:.6,ease:'elastic.out(1,.4)'});
+  const yTo = gsap.quickTo(btn,'y',{duration:.6,ease:'elastic.out(1,.4)'});
+  btn.addEventListener('mousemove', function(e){
+    const r = btn.getBoundingClientRect();
+    xTo((e.clientX - r.left - r.width/2) * .3);
+    yTo((e.clientY - r.top - r.height/2) * .45);
+  });
+  btn.addEventListener('mouseleave', function(){ xTo(0); yTo(0); });
+});
+
+/* ============================================================
+   HERO 3D — barber pole + particles
+   ============================================================ */
+function initHero3D(){
+  const canvas = document.getElementById('hero3d');
+  if (!canvas || !window.THREE) return;
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true }); }
+  catch(e){ return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  camera.position.set(0, 0, 14);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // --- striped texture ---
+  const tc = document.createElement('canvas'); tc.width = 128; tc.height = 128;
+  const g = tc.getContext('2d');
+  g.fillStyle = '#f7f4ee'; g.fillRect(0,0,128,128);
+  g.strokeStyle = '#e0321f'; g.lineWidth = 26;
+  for (let i = -128; i < 256; i += 64){ g.beginPath(); g.moveTo(i,0); g.lineTo(i+128,128); g.stroke(); }
+  g.strokeStyle = '#1d2a6b'; g.lineWidth = 9;
+  for (let i = -96; i < 256; i += 64){ g.beginPath(); g.moveTo(i,0); g.lineTo(i+128,128); g.stroke(); }
+  const tex = new THREE.CanvasTexture(tc);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(2, 5);
+
+  const pole = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.15, 1.15, 8.6, 64, 1, true),
+    new THREE.MeshStandardMaterial({ map: tex, roughness: .42, metalness: .05, side: THREE.DoubleSide })
+  );
+  group.add(pole);
+
+  const glass = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.42, 1.42, 8.8, 64, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: .1, roughness: .05, metalness: .9, side: THREE.DoubleSide })
+  );
+  group.add(glass);
+
+  const goldMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .22, metalness: 1 });
+  [1, -1].forEach(function(s){
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(1.62, 1.42, 1.1, 64), goldMat);
+    cap.position.y = s * 4.6; group.add(cap);
+    const tip = new THREE.Mesh(new THREE.SphereGeometry(.72, 32, 24), goldMat);
+    tip.position.y = s * 5.5; group.add(tip);
+  });
+
+  // --- particles ---
+  const N = 260, pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++){
+    pos[i*3]   = (Math.random() - .5) * 26;
+    pos[i*3+1] = (Math.random() - .5) * 18;
+    pos[i*3+2] = (Math.random() - .5) * 12 - 2;
+  }
+  const pg = new THREE.BufferGeometry();
+  pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const dust = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xd9a441, size: .07, transparent: true, opacity: .55 }));
+  scene.add(dust);
+
+  // --- lights ---
+  scene.add(new THREE.AmbientLight(0xffffff, .55));
+  const key = new THREE.DirectionalLight(0xffffff, 1.15); key.position.set(4, 6, 8); scene.add(key);
+  const warm = new THREE.PointLight(0xd9a441, 2.4, 40); warm.position.set(-7, 2, 6); scene.add(warm);
+  const cool = new THREE.PointLight(0x4a6cff, 1.1, 40); cool.position.set(6, -4, 4); scene.add(cool);
+
+  group.rotation.z = 0.19;
+  group.rotation.x = 0.06;
+
+  function layout(){
+    const w = canvas.clientWidth || window.innerWidth;
+    const h = canvas.clientHeight || window.innerHeight;
+    renderer.setSize(w, h, false);
+    const narrow = w < 900;
+    camera.aspect = w / h;
+    // world half-width at z=0, so the pole can sit at a fixed % of the viewport
+    const halfW = Math.tan(camera.fov * Math.PI / 360) * camera.position.z * camera.aspect;
+    group.position.x = narrow ? -halfW * .58 : -halfW * .64;   // ~18% from the left edge
+    group.position.y = narrow ? 3.1 : 0;
+    const s = narrow ? .42 : Math.min(1.15, h / 760);
+    group.scale.setScalar(s);
+    camera.updateProjectionMatrix();
+  }
+  layout();
+  window.addEventListener('resize', layout);
+
+  let mx = 0, my = 0, tmx = 0, tmy = 0;
+  window.addEventListener('mousemove', function(e){
+    tmx = (e.clientX / window.innerWidth - .5);
+    tmy = (e.clientY / window.innerHeight - .5);
+  });
+
+  let scrollY = 0;
+  ScrollTrigger.create({
+    trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true,
+    onUpdate: function(self){ scrollY = self.progress; }
+  });
+
+  const clock = new THREE.Clock();
+  let visible = true;
+  document.addEventListener('visibilitychange', function(){ visible = !document.hidden; });
+
+  function tick(){
+    requestAnimationFrame(tick);
+    if (!visible) return;
+    const dt = Math.min(clock.getDelta(), .05);
+    tex.offset.y -= dt * .32;                 // the classic spinning-stripes illusion
+    mx += (tmx - mx) * .06; my += (tmy - my) * .06;
+    group.rotation.y += dt * .22;
+    group.rotation.z = 0.19 + mx * .22;
+    group.rotation.x = 0.06 + my * .18 + scrollY * .5;
+    group.position.y = (canvas.clientWidth < 900 ? 3.1 : 0) - scrollY * 4.5;
+    dust.rotation.y += dt * .035;
+    dust.position.y = scrollY * 3;
+    renderer.render(scene, camera);
+  }
+  tick();
+}
+
+/* ============================================================
+   PRELOADER
+   ============================================================ */
+(function(){
+  const word = document.getElementById('plWord');
+  word.innerHTML = word.textContent.split('').map(function(ch){
+    return '<span>' + (ch === ' ' ? '&nbsp;' : ch) + '</span>';
+  }).join('');
+
+  const tl = gsap.timeline();
+  tl.to('#plWord span', { opacity:1, y:0, duration:.7, ease:'power3.out', stagger:.022 })
+    .to('#preloader .pl-bar i', { right:'0%', duration:1.5, ease:'power2.inOut' }, .15)
+    .to({ v:0 }, { v:100, duration:1.5, ease:'power2.inOut',
+          onUpdate: function(){ document.getElementById('plNum').textContent = Math.round(this.targets()[0].v); } }, .15)
+    .to('#plWord span', { opacity:0, y:'-60%', duration:.5, ease:'power3.in', stagger:.01 }, '+=.15')
+    .to('#preloader', { yPercent:-100, duration:.9, ease:'expo.inOut',
+          onStart: function(){ document.body.classList.remove('is-loading'); if (lenis) lenis.start(); } }, '-=.2')
+    .set('#preloader', { display:'none' })
+    .add(heroIn, '-=.55');
+
+  function heroIn(){
+    gsap.to('.hero h1 .rv > i', { y:'0%', duration:1.1, ease:'expo.out', stagger:.07 });
+    gsap.from('.hero .eyebrow', { y:20, opacity:0, duration:.9, ease:'power3.out' }, 0);
+    gsap.from('.hero-sub', { y:26, opacity:0, duration:.9, delay:.25, ease:'power3.out' });
+    gsap.from('.hero-cta > *', { y:26, opacity:0, duration:.8, delay:.4, stagger:.1, ease:'power3.out' });
+    gsap.from('.hero-foot', { opacity:0, duration:1, delay:.7 });
+    ScrollTrigger.refresh();
+  }
+  if (lenis) lenis.stop();
+})();
+
+window.addEventListener('load', initHero3D);
+
+/* ============================================================
+   SCROLL ANIMATIONS
+   ============================================================ */
+/* progress bar */
+gsap.to('.progress i', { scaleX:1, ease:'none',
+  scrollTrigger:{ trigger:document.body, start:'top top', end:'bottom bottom', scrub:.3 } });
+
+/* nav background */
+ScrollTrigger.create({ start:'top -80', onUpdate: function(s){
+  document.querySelector('.nav').classList.toggle('scrolled', s.scroll() > 80);
+  document.getElementById('stickyBar').classList.toggle('show', s.scroll() > window.innerHeight * .8);
+}});
+
+/* generic reveals */
+function reveal(sel, opts){
+  gsap.utils.toArray(sel).forEach(function(el){
+    gsap.from(el, Object.assign({ y:46, opacity:0, duration:1, ease:'power3.out',
+      scrollTrigger:{ trigger:el, start:'top 86%' } }, opts || {}));
+  });
+}
+reveal('.wrap .eyebrow');
+reveal('.wrap h2', { y:70 });
+reveal('.wrap .lead', { y:34, duration:.9 });
+reveal('.pain-row', { y:40, duration:.85 });
+reveal('.card', { y:60, duration:.9 });
+reveal('.about-points li', { x:-30, y:0, duration:.7 });
+reveal('.calc', { y:60 });
+reveal('.faq-item', { y:24, duration:.7 });
+reveal('.form-card', { y:50 });
+reveal('.stat', { y:40, duration:.8 });
+
+/* parallax image */
+gsap.utils.toArray('[data-parallax]').forEach(function(el){
+  gsap.fromTo(el, { yPercent:8 }, { yPercent:-8, ease:'none',
+    scrollTrigger:{ trigger:el, start:'top bottom', end:'bottom top', scrub:.6 } });
+});
+
+/* counters */
+gsap.utils.toArray('.stat .n').forEach(function(el){
+  const end = parseFloat(el.dataset.count || '0');
+  const pre = el.dataset.prefix || '', suf = el.dataset.suffix || '';
+  ScrollTrigger.create({ trigger:el, start:'top 88%', once:true, onEnter: function(){
+    gsap.to({ v:0 }, { v:end, duration:1.8, ease:'power2.out', onUpdate: function(){
+      el.textContent = pre + Math.round(this.targets()[0].v).toLocaleString('he-IL') + suf;
+    }});
+  }});
+});
+
+/* marquees (RTL: content overflows to the left, so we translate +x) */
+function loopMarquee(track, itemSel, speed){
+  const item = track.querySelector(itemSel);
+  if (!item) return;
+  track.appendChild(item.cloneNode(true));
+  track.appendChild(item.cloneNode(true));
+  const w = item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).gap || 0);
+  gsap.fromTo(track, { x:0 }, { x:w, duration: w / speed, ease:'none', repeat:-1 });
+}
+loopMarquee(document.querySelector('#marquee .track'), '.item', 70);
+loopMarquee(document.getElementById('quotes'), '.quote', 55);
+
+/* pinned horizontal sessions (desktop only) */
+gsap.matchMedia().add('(min-width: 901px)', function(){
+  const track = document.querySelector('.hscroll');
+  const dist = track.scrollWidth - window.innerWidth + 40;
+  if (dist <= 0) return;
+  const tw = gsap.to(track, { x: dist, ease:'none',
+    scrollTrigger:{ trigger:'.sessions', start:'top top', end: '+=' + dist * 1.15,
+      pin:true, scrub:.8, anticipatePin:1, invalidateOnRefresh:true } });
+  return function(){ tw.scrollTrigger && tw.scrollTrigger.kill(); tw.kill(); gsap.set(track,{x:0}); };
+});
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+document.querySelectorAll('.faq-q').forEach(function(q){
+  q.addEventListener('click', function(){
+    const item = q.parentElement, a = item.querySelector('.faq-a');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(function(o){
+      o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight = '0px';
+    });
+    if (!isOpen){ item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
+    if (lenis) setTimeout(function(){ ScrollTrigger.refresh(); }, 600);
+  });
+});
+
+/* ============================================================
+   MONEY CALCULATOR
+   ============================================================ */
+(function(){
+  const sc = document.getElementById('sClients'), sp = document.getElementById('sPrice'), sd = document.getElementById('sDays');
+  const vc = document.getElementById('vClients'), vp = document.getElementById('vPrice'), vd = document.getElementById('vDays');
+  const out = document.getElementById('vTotal');
+  let shown = 0;
+  function calc(animate){
+    vc.textContent = sc.value; vp.textContent = sp.value; vd.textContent = sd.value;
+    const total = sc.value * sp.value * sd.value;
+    gsap.to({ v: shown }, { v: total, duration: animate === false ? 0 : .55, ease:'power2.out',
+      onUpdate: function(){ out.textContent = Math.round(this.targets()[0].v).toLocaleString('he-IL'); },
+      onComplete: function(){ shown = total; } });
+    shown = total;
+  }
+  [sc, sp, sd].forEach(function(s){ s.addEventListener('input', function(){ calc(true); }); });
+  calc(false);
+})();
+
+/* ============================================================
+   LEAD FORM
+   ============================================================ */
+document.getElementById('leadForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const name = document.getElementById('fName').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
+  const status = document.getElementById('fStatus').value;
+  const when = document.getElementById('fWhen').value.trim();
+
+  if (name.length < 2){ shake('#fName'); return; }
+  if (!/^0?[2-9]\d{7,9}$/.test(phone.replace(/[-\s]/g,''))){ shake('#fPhone'); return; }
+
+  const payload = { name:name, phone:phone, status:status, when:when, source:'landing-page', ts:new Date().toISOString() };
+
+  function done(){
+    gsap.to('#leadForm', { opacity:0, y:-16, duration:.4, onComplete: function(){
+      document.getElementById('leadForm').style.display = 'none';
+      const ok = document.getElementById('formOk'); ok.classList.add('show');
+      gsap.from(ok, { opacity:0, y:20, duration:.6 });
+    }});
+  }
+
+  if (CONFIG.webhook){
+    fetch(CONFIG.webhook, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) })
+      .then(done).catch(done);
+  } else {
+    const txt = 'היי דור, אני ' + name + '. טלפון: ' + phone +
+                (status ? '. מצב: ' + status : '') + (when ? '. רוצה להתחיל: ' + when : '') +
+                '. אשמח לפרטים על המחזור הקרוב.';
+    window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(txt), '_blank');
+    done();
+  }
+});
+function shake(sel){
+  const el = document.querySelector(sel);
+  gsap.fromTo(el, { x:-8 }, { x:0, duration:.5, ease:'elastic.out(1,.3)' });
+  el.style.borderColor = 'var(--red)';
+  el.focus();
+  setTimeout(function(){ el.style.borderColor = ''; }, 1600);
+}
+
+window.addEventListener('load', function(){ setTimeout(function(){ ScrollTrigger.refresh(); }, 400); });
+</script>
+</body>
+</html>
