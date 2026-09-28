@@ -260,7 +260,14 @@ main .act + .act{margin-block-start:-100svh}
 .dor-stats{display:flex;gap:clamp(18px,3vw,44px);margin-top:30px;flex-wrap:wrap}
 .dor-stats .n{font-size:clamp(28px,3.4vw,46px);font-weight:900;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
 .dor-stats .l{font-size:12.5px;color:var(--muted);margin-top:6px;max-width:16ch}
-@media(max-width:900px){.dor-grid{grid-template-columns:1fr;gap:22px}.iris{aspect-ratio:3/2;max-height:34vh}.dor-points,.dor-stats{display:none}}
+@media(max-width:900px){
+  .dor-grid{grid-template-columns:1fr;gap:18px}
+  .iris{aspect-ratio:16/10;max-height:26vh}
+  .dor-copy .lead{font-size:15px;line-height:1.5}
+  .dor-points{margin-top:16px;gap:8px}
+  .dor-points li{font-size:13.5px}
+  .dor-stats{display:none}
+}
 
 /* ---- act: money ---- */
 .money-inner{text-align:center}
@@ -470,11 +477,11 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
 <section class="act" id="about" data-act="דור">
   <div class="act-inner dor-grid">
     <div class="dor-copy">
-      <div class="eyebrow">מי עומד מאחורי זה</div>
+      <div class="eyebrow">10 שנים בתחום</div>
       <h2>דור <span class="gold">גבאי</span></h2>
-      <p class="lead" style="margin-top:20px">[כאן נכנסים 3–4 משפטים בגוף ראשון: כמה שנים במקצוע, איפה התחלת, מה עברת עד שהגעת לאן שאתה היום, ולמה החלטת ללמד. זה החלק שהכי מוכר — תכתוב אותו כמו שאתה מדבר.]</p>
+      <p class="lead" style="margin-top:20px">היום אני בעלים גאה של אקדמיה יוקרתית ומספרה מצליחה שמלאה חודש קדימה — אבל לא נולדתי עם מספריים ביד. את הדרך שלי התחלתי לפני עשר שנים בדיוק, כתלמיד, מהבסיס: אין־ספור תספורות, טעויות ושעות של אימונים. בניתי את עצמי ואת העסק שלי בעשר אצבעות, משלב החניכות ועד להפיכתי למאסטר ברבר. המטרה שלי היום היא לקחת את כל הידע, הסודות והניסיון שצברתי בעשור הזה — ולהעביר אותם אליך בצורה המקצועית והמהירה ביותר.</p>
       <ul class="dor-points">
-        <li><span class="tick">✕</span><span>[X] שנים מאחורי הכיסא, אלפי תספורות</span></li>
+        <li><span class="tick">✕</span><span>10 שנים מאחורי הכיסא, אלפי תספורות</span></li>
         <li><span class="tick">✕</span><span>קבוצות קטנות בלבד — יד על היד</span></li>
         <li><span class="tick">✕</span><span>ליווי גם אחרי הקורס: קבוצה סגורה ושאלות</span></li>
       </ul>
@@ -580,7 +587,7 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
 
   <footer>
     <div>© <span id="yr"></span> האקדמיה של דור גבאי · כל הזכויות שמורות</div>
-    <div>[טלפון] · [אינסטגרם] · [כתובת]</div>
+    <div><a href="tel:0545390450">054-539-0450</a> · [אינסטגרם] · [כתובת]</div>
   </footer>
 </div>
 
@@ -634,7 +641,7 @@ function t(t,i,e){return Math.max(t,Math.min(i,e))}var i=class{isRunning=!1;valu
    ⚙️  הגדרות — כאן משנים פרטים, לא צריך לגעת בשאר הקוד
    ============================================================ */
 const CONFIG = {
-  whatsapp: '972500000000',
+  whatsapp: '972545390450',
   waMessage: 'היי דור, ראיתי את הדף של הקורס ואשמח לפרטים על המחזור הקרוב',
   webhook: ''
 };
