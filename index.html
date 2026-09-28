@@ -251,7 +251,7 @@ main .act + .act{margin-block-start:-100svh}
   font-size:11px;letter-spacing:.24em;color:var(--muted)}
 .vault-hint .l{width:26px;height:1px;background:var(--gold)}
 .big-num{will-change:filter,transform}
-.big-num{font-size:clamp(58px,13vw,220px);font-weight:900;letter-spacing:-.055em;line-height:.9;
+.big-num{font-size:clamp(46px,11vw,150px);white-space:nowrap;font-weight:900;letter-spacing:-.055em;line-height:.9;
   background:linear-gradient(120deg,var(--gold-hi),var(--gold) 52%,#8a5f18);-webkit-background-clip:text;background-clip:text;
   color:transparent;font-variant-numeric:tabular-nums}
 .money-cap{font-size:12px;letter-spacing:.3em;color:var(--muted);margin-top:clamp(14px,2.4vh,30px)}
@@ -284,6 +284,10 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border:0;border-radiu
   background:linear-gradient(rgba(8,8,10,.5),rgba(8,8,10,.9))}
 
 /* ---- final chapter (normal flow) ---- */
+/* Visible by default; JS adds .pending and takes it off again as each block arrives,
+   so no script failure can leave the form blank. */
+.finale .wrap > *{transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.finale .wrap > *.pending{opacity:0;transform:translateY(34px)}
 .finale{position:relative;z-index:2;background:linear-gradient(180deg,rgba(8,8,10,0) 0%,#0a0806 12%,#08080a 100%)}
 .finale .wrap{padding:clamp(60px,9vh,110px) var(--pad);max-width:1600px;margin-inline:auto}
 .faq-item{border-bottom:1px solid var(--line)}
@@ -473,8 +477,8 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
     <div class="big-num">₪<span id="vTotal">0,000</span></div>
     <div class="vault-body">
     <div class="calc">
-      <div class="ctrl"><label>לקוחות ביום <b id="vClients">6</b></label><input type="range" id="sClients" min="2" max="14" value="6" step="1"></div>
-      <div class="ctrl"><label>מחיר תספורת <b>₪<span id="vPrice">70</span></b></label><input type="range" id="sPrice" min="40" max="150" value="70" step="5"></div>
+      <div class="ctrl"><label>לקוחות ביום <b id="vClients">6</b></label><input type="range" id="sClients" min="2" max="40" value="6" step="1"></div>
+      <div class="ctrl"><label>מחיר תספורת <b>₪<span id="vPrice">70</span></b></label><input type="range" id="sPrice" min="40" max="170" value="70" step="5"></div>
       <div class="ctrl"><label>ימי עבודה בחודש <b id="vDays">22</b></label><input type="range" id="sDays" min="12" max="26" value="22" step="1"></div>
     </div>
     <p class="money-note">לפני הוצאות ומיסים. תזיז את הסליידרים — זו לא הבטחה, זו חשבונאות של ברבר שעובד.</p>
@@ -1009,10 +1013,27 @@ let calcLive=false;
 CAM.push({st:ScrollTrigger.create({trigger:'#finale',start:'top bottom',end:'top top'}),
   to:{fx:-.55,y:0,s:.7,z:-4,rz:.19,spin:.2,dust:.03,ring:.1,glow:1.4}, ratio:1});
 camBuild();
-gsap.from('#finale .wrap > *',{y:40,opacity:0,duration:.9,ease:'power3.out',stagger:.08,
-  scrollTrigger:{trigger:'#finale',start:'top 70%'}});
-gsap.from('.form-card',{y:50,opacity:0,duration:.9,ease:'power3.out',
-  scrollTrigger:{trigger:'.form-card',start:'top 88%'}});
+/* The finale carries the FAQ and the lead form — the only part of this page that earns
+   anything — so its reveal is deliberately kept out of GSAP and ScrollTrigger. A phone
+   hiding its address bar fires a resize, a resize refreshes ScrollTrigger, and a refresh
+   was re-applying the hidden start state and then never playing it back: the form went
+   blank on the live site. This is a plain class toggled by IntersectionObserver, which no
+   refresh can undo — the class is only ever removed, never re-added, and a timer strips it
+   regardless so nothing can leave the form invisible. */
+(function(){
+  const items = gsap.utils.toArray('#finale .wrap > *');
+  const show = el => el.classList.remove('pending');
+  items.forEach(el => el.classList.add('pending'));
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting){ show(e.target); io.unobserve(e.target); }
+    }), { rootMargin: '0px 0px -6% 0px' });
+    items.forEach(el => io.observe(el));
+  } else {
+    items.forEach(show);
+  }
+  setTimeout(() => items.forEach(show), 9000);
+})();
 
 /* ============================================================
    CHROME — rail, progress, nav
@@ -1056,7 +1077,8 @@ document.querySelectorAll('.faq-q').forEach(q=>{
     calcLive=true;
     vc.textContent=sc.value; vp.textContent=sp.value; vd.textContent=sd.value;
     const total=sc.value*sp.value*sd.value;
-    gsap.to({v:shown},{v:total,duration:.5,ease:'power2.out',
+    out.textContent=Math.round(total).toLocaleString('he-IL');  // the true figure first,
+    gsap.to({v:shown},{v:total,duration:.5,ease:'power2.out',    // the count-up only decorates it
       onUpdate(){ out.textContent=Math.round(this.targets()[0].v).toLocaleString('he-IL'); }});
     shown=total;
   }
