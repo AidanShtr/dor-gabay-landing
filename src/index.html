@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>האקדמיה של דור גבאי — קורס ברברינג ב־8 מפגשים</title>
-<meta name="description" content="מאפס למספרה ב־8 מפגשים. קורס ברברינג פרקטי לחיילים משוחררים וצעירים שרוצים מקצוע עם הכנסה מהירה, בלי תואר ובלי שנים של לימודים.">
-<meta property="og:title" content="האקדמיה של דור גבאי — מקצוע ביד ב־8 מפגשים">
+<title>האקדמיה של דור גבאי — קורס ברברינג ב־10 מפגשים</title>
+<meta name="description" content="מאפס למספרה ב־10 מפגשים. קורס ברברינג פרקטי לחיילים משוחררים וצעירים שרוצים מקצוע עם הכנסה מהירה, בלי תואר ובלי שנים של לימודים.">
+<meta property="og:title" content="האקדמיה של דור גבאי — מקצוע ביד ב־10 מפגשים">
 <meta property="og:description" content="קורס ברברינג פרקטי. מאפס למספרה. בלי תואר, בלי חובות.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://aidanshtr.github.io/dor-gabay-landing/assets/og.jpg">
@@ -168,12 +168,33 @@ main .act + .act{margin-block-start:-100svh}
 
 /* ---- act: pains (dealt cards) ---- */
 .deck{position:relative;width:min(88vw,860px);height:min(52vh,400px);margin-inline:auto}
-.pcard{position:absolute;inset:0;border-radius:28px;padding:clamp(26px,4vw,52px);
-  background:linear-gradient(152deg,#17171d,#0c0c10);border:1px solid var(--line);
-  box-shadow:0 50px 90px -30px rgba(0,0,0,.9);display:flex;flex-direction:column;justify-content:space-between;will-change:transform}
-.pcard .pidx{font-size:12px;letter-spacing:.26em;color:var(--gold)}
-.pcard .ptxt{font-size:clamp(24px,3.6vw,54px);font-weight:800;letter-spacing:-.025em;line-height:1.14}
-.pcard .pfoot{font-size:14px;color:var(--muted)}
+.pcard{position:absolute;inset:0;border-radius:28px;padding:clamp(26px,3.6vw,48px);overflow:hidden;
+  background:radial-gradient(130% 100% at 100% 0%,rgba(217,164,65,.11),transparent 58%),
+             linear-gradient(152deg,#1a1a21,#0b0b0f);
+  border:1px solid rgba(242,238,230,.14);
+  box-shadow:0 50px 90px -30px rgba(0,0,0,.9),inset 0 1px 0 rgba(242,238,230,.07);
+  display:flex;flex-direction:column;justify-content:space-between;will-change:transform}
+/* the barber stripe, only just perceptible */
+.pcard::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(-45deg,rgba(242,238,230,.02) 0 2px,transparent 2px 11px)}
+/* the numeral as architecture rather than a label */
+.pcard::after{content:attr(data-n);position:absolute;inset-inline-start:-.06em;bottom:-.3em;
+  font-size:clamp(150px,25vw,290px);font-weight:900;line-height:.8;letter-spacing:-.06em;
+  color:transparent;-webkit-text-stroke:1px rgba(217,164,65,.14);pointer-events:none}
+.pcard > *{position:relative;z-index:1}
+.pcard .pidx{display:inline-flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.26em;color:var(--gold)}
+.pcard .pidx::before{content:"";width:24px;height:1px;background:var(--gold)}
+.pcard .ptxt{font-size:clamp(23px,3.3vw,50px);font-weight:800;letter-spacing:-.025em;line-height:1.14;
+  text-wrap:balance;max-width:17ch}
+.pcard .pfoot{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--muted);
+  padding-top:15px;border-top:1px solid rgba(242,238,230,.09)}
+.pcard .pfoot::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none;
+  box-shadow:0 0 10px rgba(217,164,65,.7)}
+@media(max-width:700px){
+  .pcard{padding:24px}
+  .pcard::after{font-size:clamp(120px,34vw,180px)}
+  .pcard .ptxt{max-width:none}
+}
 .deck-head{text-align:center;margin-bottom:clamp(60px,9vh,110px)}
 .deck-head h2{font-size:var(--fs-h2)}
 
@@ -347,13 +368,13 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
   <div class="act-inner">
     <div class="eyebrow">מחזור חדש נפתח בקרוב · מקומות מוגבלים</div>
     <h1 class="hero-h1">
-      <span class="rv"><i>8</i></span> <span class="rv"><i>מפגשים.</i></span><br>
+      <span class="rv"><i>10</i></span> <span class="rv"><i>מפגשים.</i></span><br>
       <span class="rv"><i class="stroke">מקצוע</i></span> <span class="rv"><i>לכל</i></span> <span class="rv"><i>החיים.</i></span>
     </h1>
     <p class="lead hero-sub">בלי תואר. בלי חובות. בלי לחכות שלוש שנים.<br>אתה נכנס בלי לדעת להחזיק מכונה — ויוצא עם מספריים ביד, תיק עבודות ולקוחות משלמים.</p>
     <div class="hero-cta">
       <a href="#lead" class="btn btn-gold" data-hot>אני רוצה פרטים <span class="arrow">←</span></a>
-      <a href="#program" class="btn btn-ghost" data-hot>מה לומדים ב־8 מפגשים</a>
+      <a href="#program" class="btn btn-ghost" data-hot>מה לומדים ב־10 מפגשים</a>
     </div>
   </div>
   <div class="hero-foot">
@@ -380,10 +401,10 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
       <h2>למה אתה <span class="gold">באמת</span> כאן</h2>
     </div>
     <div class="deck">
-      <article class="pcard"><div class="pidx">01</div><div class="ptxt">אין לך 3–4 שנים לבזבז על תואר שאתה לא בטוח בו</div><div class="pfoot">וגם אם תסיים — אין הבטחה לעבודה</div></article>
-      <article class="pcard"><div class="pidx">02</div><div class="ptxt">נמאס לך ממשמרות של 12 שעות בשכר מינימום</div><div class="pfoot">הגוף נשחק, החשבון לא זז</div></article>
-      <article class="pcard"><div class="pidx">03</div><div class="ptxt">אתה רוצה מקצוע שאף בוס לא יכול לקחת ממך</div><div class="pfoot">היד שלך = הנכס שלך</div></article>
-      <article class="pcard"><div class="pidx">04</div><div class="ptxt">אתה רוצה להתחיל להכניס כסף החודש. לא בעוד שנתיים</div><div class="pfoot">וזה בדיוק מה שהקורס הזה בנוי בשבילו</div></article>
+      <article class="pcard" data-n="01"><div class="pidx">01</div><div class="ptxt">אין לך 3–4 שנים לבזבז על תואר שאתה לא בטוח בו</div><div class="pfoot">וגם אם תסיים — אין הבטחה לעבודה</div></article>
+      <article class="pcard" data-n="02"><div class="pidx">02</div><div class="ptxt">נמאס לך ממשמרות של 12 שעות בשכר מינימום</div><div class="pfoot">הגוף נשחק, החשבון לא זז</div></article>
+      <article class="pcard" data-n="03"><div class="pidx">03</div><div class="ptxt">אתה רוצה מקצוע שאף בוס לא יכול לקחת ממך</div><div class="pfoot">היד שלך = הנכס שלך</div></article>
+      <article class="pcard" data-n="04"><div class="pidx">04</div><div class="ptxt">אתה רוצה להתחיל להכניס כסף החודש. לא בעוד שנתיים</div><div class="pfoot">וזה בדיוק מה שהקורס הזה בנוי בשבילו</div></article>
     </div>
   </div>
 </section>
@@ -392,7 +413,7 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
 <section class="act" id="program" data-act="התוכנית" data-leaves>
   <div class="prog-head">
     <div class="eyebrow">התוכנית</div>
-    <h2>8 מפגשים. אפס מילים <span class="gold">מיותרות.</span></h2>
+    <h2>10 מפגשים. אפס מילים <span class="gold">מיותרות.</span></h2>
   </div>
   <div class="rail-outer" style="width:100%">
     <div class="rail">
@@ -400,10 +421,12 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
       <article class="scard"><div class="num">מפגש 02</div><h3>פייד — הבסיס</h3><p>קווי מתאר, גובה הפייד, מעברים. התרגול שחוזר על עצמו עד שהיד עושה את זה לבד.</p></article>
       <article class="scard"><div class="num">מפגש 03</div><h3>סקין פייד ומעברים</h3><p>הפייד שכל לקוח מבקש. איך יורדים לעור בלי קווים ובלי כתמים, ואיך מתקנים כשמשהו יוצא לא נכון.</p></article>
       <article class="scard"><div class="num">מפגש 04</div><h3>מספריים וטקסטורה</h3><p>עבודת מספריים, קיצור מעל האוזן, טקסטורה למעלה. השלב שמפריד בין תספורת "בסדר" לתספורת שמחזירה לקוח.</p></article>
-      <article class="scard"><div class="num">מפגש 05</div><h3>זקן, תער וקווים</h3><p>עיצוב זקן, חיבור לקו הלחי, גילוח בתער חם. זה גם המקום שבו מעלים את מחיר התספורת.</p></article>
-      <article class="scard"><div class="num">מפגש 06</div><h3>לקוח אמיתי</h3><p>ראש חי על הכיסא, זמן על השעון. אתה עובד, אני עומד מאחורי הכתף ומתקן בזמן אמת.</p></article>
-      <article class="scard"><div class="num">מפגש 07</div><h3>אינסטגרם ותיק עבודות</h3><p>איך מצלמים לפני/אחרי שנראה מקצועי, מה מעלים, ואיך מביאים את 20 הלקוחות הראשונים בלי לשלם על פרסום.</p></article>
-      <article class="scard"><div class="num">מפגש 08</div><h3>להפוך את זה לעסק</h3><p>תמחור, עוסק פטור, ציוד שכדאי לקנות ומה לא, כיסא בשכירות מול ניידת. איך מתחילים להכניס כסף כבר בשבוע הבא.</p></article>
+      <article class="scard"><div class="num">מפגש 05</div><h3>שיער מתולתל וסוגי שיער</h3><p>לא כל ראש מתנהג אותו דבר. תלתל, גלי, שיער דק, קרחת מתחילה — איך קוראים את סוג השיער ומתאימים לו את העבודה.</p></article>
+      <article class="scard"><div class="num">מפגש 06</div><h3>זקן, תער וקווים</h3><p>עיצוב זקן, חיבור לקו הלחי, גילוח בתער חם. זה גם המקום שבו מעלים את מחיר התספורת.</p></article>
+      <article class="scard"><div class="num">מפגש 07</div><h3>תיקונים והצלות</h3><p>מדרגה שנחתכה גבוה מדי, פייד לא אחיד, קו שיצא עקום. מה עושים ברגע האמת כשהלקוח עוד על הכיסא.</p></article>
+      <article class="scard"><div class="num">מפגש 08</div><h3>לקוח אמיתי</h3><p>ראש חי על הכיסא, זמן על השעון. אתה עובד, אני עומד מאחורי הכתף ומתקן בזמן אמת.</p></article>
+      <article class="scard"><div class="num">מפגש 09</div><h3>אינסטגרם ותיק עבודות</h3><p>איך מצלמים לפני/אחרי שנראה מקצועי, מה מעלים, ואיך מביאים את 20 הלקוחות הראשונים בלי לשלם על פרסום.</p></article>
+      <article class="scard"><div class="num">מפגש 10</div><h3>להפוך את זה לעסק</h3><p>תמחור, עוסק פטור, ציוד שכדאי לקנות ומה לא, כיסא בשכירות מול ניידת. איך מתחילים להכניס כסף כבר בשבוע הבא.</p></article>
     </div>
   </div>
   <div class="prog-strip"><div class="track">
@@ -445,7 +468,7 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
         <li><span class="tick">✕</span><span>ליווי גם אחרי הקורס: קבוצה סגורה ושאלות</span></li>
       </ul>
       <div class="dor-stats">
-        <div><div class="n" data-count="8">0</div><div class="l">מפגשים עד לקוח משלם</div></div>
+        <div><div class="n" data-count="10">0</div><div class="l">מפגשים עד לקוח משלם</div></div>
         <div><div class="n" data-count="90" data-suffix="%">0</div><div class="l">עבודה מעשית, לא תיאוריה</div></div>
         <div><div class="n" data-count="120" data-suffix="+">0</div><div class="l">בוגרים שכבר עובדים</div></div>
       </div>
@@ -488,7 +511,7 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
     <div class="fan">
       <div class="qcard"><div class="stars">★★★★★</div><p>"נכנסתי חודש אחרי השחרור בלי מושג מה זה פייד. היום אני עובד בכיסא בשכירות ומכניס יותר ממה שהרווחתי במלצרות."</p><div class="who"><span class="av">א</span><span>[שם] · בוגר מחזור [X]</span></div></div>
       <div class="qcard"><div class="stars">★★★★★</div><p>"מה שהכי עזר זה מפגש 7. לא רק ללמוד לספר — ללמוד איך להביא לקוחות. הגעתי ל־15 לקוחות קבועים בחודש הראשון."</p><div class="who"><span class="av">מ</span><span>[שם] · בוגר מחזור [X]</span></div></div>
-      <div class="qcard"><div class="stars">★★★★★</div><p>"הייתי בקורס אחר של 6 חודשים ויצאתי בלי ביטחון. פה תוך 8 מפגשים כבר עבדתי על ראשים אמיתיים."</p><div class="who"><span class="av">י</span><span>[שם] · בוגר מחזור [X]</span></div></div>
+      <div class="qcard"><div class="stars">★★★★★</div><p>"הייתי בקורס אחר של 6 חודשים ויצאתי בלי ביטחון. פה תוך 10 מפגשים כבר עבדתי על ראשים אמיתיים."</p><div class="who"><span class="av">י</span><span>[שם] · בוגר מחזור [X]</span></div></div>
       <div class="qcard"><div class="stars">★★★★★</div><p>"דור לא עוזב אותך אחרי שנגמר. עד היום אני שולח לו תמונות ושואל שאלות והוא עונה."</p><div class="who"><span class="av">ש</span><span>[שם] · בוגר מחזור [X]</span></div></div>
     </div>
   </div>
@@ -843,14 +866,14 @@ function openLeaves(tl,el,at){
   const el=act('program');
   const rail=el.querySelector('.rail');
   const dist=()=>Math.max(0, rail.scrollWidth - innerWidth + 40);
-  const tl=actTL(el,2.2,{fx:-.2,y:-3.4,s:.5,z:-15,rz:1.5,spin:.25,dust:.05,ring:.35});
+  const tl=actTL(el,2.75,{fx:-.2,y:-3.4,s:.5,z:-15,rz:1.5,spin:.25,dust:.05,ring:.35});
   openLeaves(tl,el,0);
   gsap.set(el.querySelector('.prog-head'),{opacity:0,y:-20});
   tl.to(el.querySelector('.prog-head'),{opacity:1,y:0,duration:.35,ease:'power3.out'},.2);
   tl.fromTo(rail,{x:0},{x:()=>dist(),duration:2.4,ease:'none'},.4);
 
   const cards=gsap.utils.toArray(el.querySelectorAll('.scard'));
-  ScrollTrigger.create({trigger:el,start:'top top',end:'+='+(innerHeight*2.2),
+  ScrollTrigger.create({trigger:el,start:'top top',end:'+='+(innerHeight*2.75),
     onUpdate(){
       const mid=innerWidth/2; let best=null,bd=1e9;
       cards.forEach(c=>{const r=c.getBoundingClientRect();const d=Math.abs(r.left+r.width/2-mid);
