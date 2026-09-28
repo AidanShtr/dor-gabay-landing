@@ -243,11 +243,19 @@ main .act + .act{margin-block-start:-100svh}
 
 /* ---- act: money ---- */
 .money-inner{text-align:center}
+.vault{max-width:880px;margin-inline:auto;border:1px solid var(--line);border-radius:28px;
+  padding:clamp(24px,3.2vw,44px);background:rgba(18,16,13,.55);backdrop-filter:blur(10px)}
+.vault-q{font-size:clamp(23px,3.9vw,54px);line-height:1.06;text-wrap:balance}
+.vault-body{overflow:hidden}
+.vault-hint{display:inline-flex;align-items:center;gap:10px;margin-top:18px;
+  font-size:11px;letter-spacing:.24em;color:var(--muted)}
+.vault-hint .l{width:26px;height:1px;background:var(--gold)}
+.big-num{will-change:filter,transform}
 .big-num{font-size:clamp(58px,13vw,220px);font-weight:900;letter-spacing:-.055em;line-height:.9;
   background:linear-gradient(120deg,var(--gold-hi),var(--gold) 52%,#8a5f18);-webkit-background-clip:text;background-clip:text;
   color:transparent;font-variant-numeric:tabular-nums}
-.money-cap{font-size:12px;letter-spacing:.3em;color:var(--muted)}
-.calc{margin:clamp(24px,4vh,44px) auto 0;max-width:820px;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,3vw,38px);
+.money-cap{font-size:12px;letter-spacing:.3em;color:var(--muted);margin-top:clamp(14px,2.4vh,30px)}
+.calc{margin:clamp(20px,3vh,36px) auto 0;max-width:820px;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,3vw,38px);
   border:1px solid var(--line);border-radius:22px;padding:clamp(18px,2.6vw,32px);background:rgba(18,16,13,.65);backdrop-filter:blur(10px)}
 .ctrl label{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:#cec9c0;margin-bottom:12px;gap:8px}
 .ctrl label b{font-size:19px;color:var(--gold);font-weight:900;font-variant-numeric:tabular-nums}
@@ -458,15 +466,21 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
 <!-- ============ ACT 6 — MONEY ============ -->
 <section class="act" id="money" data-act="הכסף">
   <div class="act-inner money-inner">
+   <div class="vault">
     <div class="eyebrow" style="margin-inline:auto">המספרים</div>
+    <h2 class="vault-q">לאיזה מספרים אתה<br>יכול <span class="gold">להגיע?</span></h2>
     <div class="money-cap">מחזור חודשי</div>
-    <div class="big-num">₪<span id="vTotal">0</span></div>
+    <div class="big-num">₪<span id="vTotal">0,000</span></div>
+    <div class="vault-body">
     <div class="calc">
       <div class="ctrl"><label>לקוחות ביום <b id="vClients">6</b></label><input type="range" id="sClients" min="2" max="14" value="6" step="1"></div>
       <div class="ctrl"><label>מחיר תספורת <b>₪<span id="vPrice">70</span></b></label><input type="range" id="sPrice" min="40" max="150" value="70" step="5"></div>
       <div class="ctrl"><label>ימי עבודה בחודש <b id="vDays">22</b></label><input type="range" id="sDays" min="12" max="26" value="22" step="1"></div>
     </div>
     <p class="money-note">לפני הוצאות ומיסים. תזיז את הסליידרים — זו לא הבטחה, זו חשבונאות של ברבר שעובד.</p>
+    </div>
+    <div class="vault-hint"><span class="l"></span> גלול כדי לפתוח</div>
+   </div>
   </div>
 </section>
 
@@ -845,8 +859,9 @@ function openLeaves(tl,el,at){
   const tl=actTL(el,.95,{fx:.95,s:.46,z:-9,rz:.4,spin:.3,dust:.05});
   gsap.set(el.querySelectorAll('.q-line'),{y:60,opacity:0});
   openLeaves(tl,el,0);
+  gsap.set(el.querySelector('.q-sub'),{y:40,opacity:0});
   tl.to(el.querySelectorAll('.q-line'),{y:0,opacity:1,duration:.5,stagger:.12,ease:'expo.out'},.22)
-    .from(el.querySelector('.q-sub'),{y:40,opacity:0,duration:.5,ease:'power3.out'},.45)
+    .to(el.querySelector('.q-sub'),{y:0,opacity:1,duration:.5,ease:'power3.out'},.45)
     .to(el.querySelector('.act-inner'),{scale:.82,opacity:0,filter:'blur(6px)',duration:.6,ease:'power2.in'},.78);
 })();
 
@@ -928,19 +943,49 @@ function openLeaves(tl,el,at){
   });
 })();
 
-/* ---- ACT 6 : the money — the number climbs as you scroll ---- */
+/* ---- ACT 7 : the money — a blurred figure that sharpens, then the dials open ---- */
 let calcLive=false;
 (function(){
   const el=act('money');
-  const tl=actTL(el,1.05,{fx:.92,y:-1,s:.42,z:-9,rz:.1,spin:.4,dust:.1,ring:.9,glow:1.6});
+  const tl=actTL(el,1.35,{fx:.92,y:-1,s:.42,z:-9,rz:.1,spin:.4,dust:.1,ring:.9,glow:1.6});
   const out=document.getElementById('vTotal');
-  gsap.set(el.querySelector('.calc'),{opacity:0,y:40});
-  gsap.set(el.querySelector('.money-note'),{opacity:0});
-  tl.to({v:0},{v:9240,duration:1,ease:'power2.out',
-      onUpdate(){ if(!calcLive) out.textContent=Math.round(this.targets()[0].v).toLocaleString('he-IL'); }},.1)
-    .to(el.querySelector('.calc'),{opacity:1,y:0,duration:.5,ease:'power3.out'},.75)
-    .to(el.querySelector('.money-note'),{opacity:1,duration:.4},.9)
-    .to({},{duration:.4});
+  const vault=el.querySelector('.vault'), body=el.querySelector('.vault-body');
+  const num=el.querySelector('.big-num'), cap=el.querySelector('.money-cap');
+  const hint=el.querySelector('.vault-hint'), q=el.querySelector('.vault-q');
+  const calc=el.querySelector('.calc'), note=el.querySelector('.money-note');
+  const TARGET=(9240).toLocaleString('he-IL');
+
+  gsap.set(body,{height:0,opacity:0});
+  gsap.set(num,{scale:.52,filter:'blur(15px)',opacity:.4});
+  gsap.set([cap,calc,note],{opacity:0});
+  gsap.set([calc,note],{y:24});
+
+  /* digits lock in from the left as you scroll — until then they are still spinning */
+  function scramble(p){
+    if(calcLive) return;
+    const total=TARGET.replace(/\D/g,'').length;
+    const lock=Math.floor(p*total+1e-6);
+    let txt='', seen=0;
+    for(const ch of TARGET){
+      if(/\d/.test(ch)){ txt += seen<lock ? ch : String(Math.floor(Math.random()*10)); seen++; }
+      else txt += ch;
+    }
+    out.textContent=txt;
+  }
+
+  gsap.set(vault,{y:44,opacity:0});
+  gsap.set(q,{y:26,opacity:0});
+  tl.to(vault,{y:0,opacity:1,duration:.3,ease:'power3.out'},0)
+    .to(q,{y:0,opacity:1,duration:.28,ease:'power3.out'},.06)
+    .to({v:0},{v:1,duration:.46,ease:'none',onUpdate(){ scramble(this.targets()[0].v); }},.22)
+    .to(num,{scale:1,filter:'blur(0px)',opacity:1,duration:.42,ease:'power2.out'},.26)
+    .to(cap,{opacity:1,duration:.22},.5)
+    .to(hint,{opacity:0,y:-14,duration:.2,ease:'power2.in'},.6)
+    .to(vault,{borderColor:'rgba(242,238,230,.04)',duration:.3},.6)
+    .to(body,{height:'auto',opacity:1,duration:.34,ease:'power2.out'},.63)
+    .to(calc,{opacity:1,y:0,duration:.28,ease:'power3.out'},.72)
+    .to(note,{opacity:1,y:0,duration:.24},.84)
+    .to({},{duration:.2});
 })();
 
 /* ---- ACT 7 : proof — the cards fly in from depth ---- */
