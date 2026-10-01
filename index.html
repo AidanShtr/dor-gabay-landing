@@ -212,17 +212,25 @@ main .act + .act{margin-block-start:-100svh}
 /* ---- act: program (horizontal rail) ---- */
 .prog-head{position:absolute;top:clamp(78px,12vh,130px);right:var(--pad);left:var(--pad);z-index:4}
 .prog-head h2{font-size:clamp(28px,4.6vw,66px)}
-.rail{display:flex;gap:clamp(16px,2vw,30px);width:max-content;padding-inline:var(--pad);align-items:center;will-change:transform}
-.scard{width:clamp(250px,25vw,360px);min-height:clamp(300px,42vh,420px);border-radius:24px;padding:30px;
-  background:var(--ink-3);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;
+.rail{display:flex;gap:clamp(16px,2vw,30px);width:max-content;padding-inline:var(--pad);align-items:stretch;will-change:transform}
+.scard{width:clamp(250px,25vw,360px);min-height:clamp(300px,42vh,420px);border-radius:24px;
+  background:var(--ink-3);border:1px solid var(--line);display:flex;flex-direction:column;
   position:relative;overflow:hidden;will-change:transform,opacity}
+.scard-img{position:relative;height:clamp(120px,16vh,180px);flex:none;overflow:hidden;background:#0e0e12}
+.scard-img img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:saturate(.92) contrast(1.04)}
+.scard-img::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(transparent 30%,rgba(21,21,27,.65) 72%,var(--ink-3))}
+.scard-body{padding:16px 26px 26px;display:flex;flex-direction:column;flex:1;position:relative;z-index:1}
 .scard::after{content:"";position:absolute;inset:auto -30% -60% auto;width:230px;height:230px;border-radius:50%;
   background:radial-gradient(circle,rgba(217,164,65,.24),transparent 65%);opacity:0;transition:opacity .5s}
 .scard.live::after{opacity:1}
 .scard.live{border-color:rgba(217,164,65,.55)}
-.scard .num{font-size:13px;letter-spacing:.26em;color:var(--gold)}
-.scard h3{margin-top:auto;padding-top:22px;font-size:clamp(20px,2.4vw,32px)}
-.scard p{margin:12px 0 0;font-size:15px;color:#a9a49b;line-height:1.55}
+.scard .num{position:absolute;top:14px;inset-inline-end:16px;z-index:2;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);background:rgba(8,8,10,.62);backdrop-filter:blur(6px);
+  border:1px solid rgba(217,164,65,.3);border-radius:999px;padding:5px 11px;line-height:1}
+.scard h3{margin-top:auto;padding-top:10px;font-size:clamp(19px,2.2vw,29px)}
+.scard p{margin:11px 0 0;font-size:14.5px;color:#a9a49b;line-height:1.55}
 .prog-strip{position:absolute;bottom:0;right:0;left:0;z-index:4;border-top:1px solid var(--line);
   background:rgba(8,8,10,.6);backdrop-filter:blur(8px);padding:12px 0;overflow:hidden}
 .prog-strip .track{display:flex;gap:40px;width:max-content}
@@ -435,16 +443,16 @@ footer{border-top:1px solid var(--line);padding:36px var(--pad);display:flex;jus
   </div>
   <div class="rail-outer" style="width:100%">
     <div class="rail">
-      <article class="scard"><div class="num">מפגש 01</div><h3>הכלים והראש</h3><p>מכונות, סכינים, מספרי מדרגה, תער. איך מחזיקים, איך מיישרים, ואיך קוראים מבנה ראש לפני שנוגעים בשיער.</p></article>
-      <article class="scard"><div class="num">מפגש 02</div><h3>פייד — הבסיס</h3><p>קווי מתאר, גובה הפייד, מעברים. התרגול שחוזר על עצמו עד שהיד עושה את זה לבד.</p></article>
-      <article class="scard"><div class="num">מפגש 03</div><h3>סקין פייד ומעברים</h3><p>הפייד שכל לקוח מבקש. איך יורדים לעור בלי קווים ובלי כתמים, ואיך מתקנים כשמשהו יוצא לא נכון.</p></article>
-      <article class="scard"><div class="num">מפגש 04</div><h3>מספריים וטקסטורה</h3><p>עבודת מספריים, קיצור מעל האוזן, טקסטורה למעלה. השלב שמפריד בין תספורת "בסדר" לתספורת שמחזירה לקוח.</p></article>
-      <article class="scard"><div class="num">מפגש 05</div><h3>שיער מתולתל וסוגי שיער</h3><p>לא כל ראש מתנהג אותו דבר. תלתל, גלי, שיער דק, קרחת מתחילה — איך קוראים את סוג השיער ומתאימים לו את העבודה.</p></article>
-      <article class="scard"><div class="num">מפגש 06</div><h3>זקן, תער וקווים</h3><p>עיצוב זקן, חיבור לקו הלחי, גילוח בתער חם. זה גם המקום שבו מעלים את מחיר התספורת.</p></article>
-      <article class="scard"><div class="num">מפגש 07</div><h3>תיקונים והצלות</h3><p>מדרגה שנחתכה גבוה מדי, פייד לא אחיד, קו שיצא עקום. מה עושים ברגע האמת כשהלקוח עוד על הכיסא.</p></article>
-      <article class="scard"><div class="num">מפגש 08</div><h3>לקוח אמיתי</h3><p>ראש חי על הכיסא, זמן על השעון. אתה עובד, אני עומד מאחורי הכתף ומתקן בזמן אמת.</p></article>
-      <article class="scard"><div class="num">מפגש 09</div><h3>אינסטגרם ותיק עבודות</h3><p>איך מצלמים לפני/אחרי שנראה מקצועי, מה מעלים, ואיך מביאים את 20 הלקוחות הראשונים בלי לשלם על פרסום.</p></article>
-      <article class="scard"><div class="num">מפגש 10</div><h3>להפוך את זה לעסק</h3><p>תמחור, עוסק פטור, ציוד שכדאי לקנות ומה לא, כיסא בשכירות מול ניידת. איך מתחילים להכניס כסף כבר בשבוע הבא.</p></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s01.webp" alt="מכונת תספורת מקצועית ביד" loading="lazy" width="760" height="426"></div><div class="num">מפגש 01</div><div class="scard-body"><h3>הכלים והראש</h3><p>מכונות, סכינים, מספרי מדרגה, תער. איך מחזיקים, איך מיישרים, ואיך קוראים מבנה ראש לפני שנוגעים בשיער.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s02.webp" alt="עבודת מכונה על קו העורף" loading="lazy" width="760" height="426"></div><div class="num">מפגש 02</div><div class="scard-body"><h3>פייד — הבסיס</h3><p>קווי מתאר, גובה הפייד, מעברים. התרגול שחוזר על עצמו עד שהיד עושה את זה לבד.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s03.webp" alt="סקין פייד נקי מהצד" loading="lazy" width="760" height="426"></div><div class="num">מפגש 03</div><div class="scard-body"><h3>סקין פייד ומעברים</h3><p>הפייד שכל לקוח מבקש. איך יורדים לעור בלי קווים ובלי כתמים, ואיך מתקנים כשמשהו יוצא לא נכון.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s04.webp" alt="עבודת מספריים עם מסרק" loading="lazy" width="760" height="426"></div><div class="num">מפגש 04</div><div class="scard-body"><h3>מספריים וטקסטורה</h3><p>עבודת מספריים, קיצור מעל האוזן, טקסטורה למעלה. השלב שמפריד בין תספורת "בסדר" לתספורת שמחזירה לקוח.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s05.webp" alt="פייד על שיער מתולתל" loading="lazy" width="760" height="426"></div><div class="num">מפגש 05</div><div class="scard-body"><h3>שיער מתולתל וסוגי שיער</h3><p>לא כל ראש מתנהג אותו דבר. תלתל, גלי, שיער דק, קרחת מתחילה — איך קוראים את סוג השיער ומתאימים לו את העבודה.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s06.webp" alt="עיצוב קווים מדויק במכונה" loading="lazy" width="760" height="426"></div><div class="num">מפגש 06</div><div class="scard-body"><h3>זקן, תער וקווים</h3><p>עיצוב זקן, חיבור לקו הלחי, גילוח בתער חם. זה גם המקום שבו מעלים את מחיר התספורת.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s07.webp" alt="מכונה ביד לתיקון מדרגה" loading="lazy" width="760" height="426"></div><div class="num">מפגש 07</div><div class="scard-body"><h3>תיקונים והצלות</h3><p>מדרגה שנחתכה גבוה מדי, פייד לא אחיד, קו שיצא עקום. מה עושים ברגע האמת כשהלקוח עוד על הכיסא.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s08.webp" alt="עבודה על לקוח אמיתי במספרה" loading="lazy" width="760" height="426"></div><div class="num">מפגש 08</div><div class="scard-body"><h3>לקוח אמיתי</h3><p>ראש חי על הכיסא, זמן על השעון. אתה עובד, אני עומד מאחורי הכתף ומתקן בזמן אמת.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s09.webp" alt="עיצוב שיער לתיק עבודות" loading="lazy" width="760" height="426"></div><div class="num">מפגש 09</div><div class="scard-body"><h3>אינסטגרם ותיק עבודות</h3><p>איך מצלמים לפני/אחרי שנראה מקצועי, מה מעלים, ואיך מביאים את 20 הלקוחות הראשונים בלי לשלם על פרסום.</p></div></article>
+      <article class="scard"><div class="scard-img"><img src="assets/s10.webp" alt="דור והצוות במספרה" loading="lazy" width="760" height="426"></div><div class="num">מפגש 10</div><div class="scard-body"><h3>להפוך את זה לעסק</h3><p>תמחור, עוסק פטור, ציוד שכדאי לקנות ומה לא, כיסא בשכירות מול ניידת. איך מתחילים להכניס כסף כבר בשבוע הבא.</p></div></article>
     </div>
   </div>
   <div class="prog-strip"><div class="track">
