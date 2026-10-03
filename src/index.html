@@ -1030,8 +1030,23 @@ function buildStops(){
   STOPS.push(Math.round(finaleTop));
   STOPS=[...new Set(STOPS)].sort((a,b)=>a-b);
 }
-ScrollTrigger.addEventListener('refresh', buildStops);
+/* ScrollTrigger reverts its pin spacers and re-applies them on every refresh, so the
+   document height collapses and expands again within a frame or two. Lenis can be left
+   holding the collapsed measurement: its scroll limit then sits thousands of pixels short
+   and the page simply stops scrolling partway down. A phone hiding its address bar fires a
+   resize, which is enough to trigger it. Re-measure after every refresh, and keep a cheap
+   watchdog, because the failure mode is a page nobody can scroll. */
+function syncScroll(){
+  if(lenis) lenis.resize();
+  buildStops();
+}
+ScrollTrigger.addEventListener('refresh', ()=>requestAnimationFrame(syncScroll));
 buildStops();
+setInterval(()=>{
+  if(!lenis) return;
+  const want=document.documentElement.scrollHeight-window.innerHeight;
+  if(Math.abs(lenis.limit-want)>8) syncScroll();
+}, 1500);
 
 (function steppedScroll(){
   if(!CONFIG.snapScroll || reduced || !lenis) return;
